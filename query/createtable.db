@@ -1,0 +1,137 @@
+CREATE TABLE NhanVien (
+    MaNV INT PRIMARY KEY AUTO_INCREMENT,
+    HoTen VARCHAR(100) NOT NULL,
+    NgaySinh DATE NOT NULL,
+    CanCuocCongDan VARCHAR(12) UNIQUE NOT NULL,
+    GioiTinh CHAR(1),
+    CHECK (GioiTinh IN ('M', 'F')),
+    SoDienThoai VARCHAR(15) NOT NULL,
+    DiaChi VARCHAR(255) NOT NULL,
+    MaQL INT,
+    CONSTRAINT FK_QuanLy FOREIGN KEY (MaQL)
+        REFERENCES NhanVien(MaNV) ON DELETE SET NULL,
+    LoaiNV VARCHAR(20),
+    CHECK (LoaiNV IN ('Toan thoi gian', 'Ban thoi gian')),
+    ChucNang VARCHAR(50),
+    ChuyenMon VARCHAR(50)
+);
+
+CREATE TABLE PhongBan (
+    MaPB INT PRIMARY KEY AUTO_INCREMENT,
+    TenPB VARCHAR(100) NOT NULL,
+    MaNVQuanLy INT,
+    MaPBQuanLy INT,
+    CONSTRAINT FK_PB_QL FOREIGN KEY (MaNVQuanLy)
+        REFERENCES NhanVien(MaNV),
+    CONSTRAINT FK_PB_PB FOREIGN KEY (MaPBQuanLy)
+        REFERENCES PhongBan(MaPB)
+);
+
+CREATE TABLE KhuVuc (
+    MaKV INT PRIMARY KEY AUTO_INCREMENT,
+    TenKV VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE BanAn (
+    MaBA INT PRIMARY KEY AUTO_INCREMENT,
+    MaKV INT,
+    SoGhe INT CHECK (SoGhe > 0),
+    CONSTRAINT FK_BA_KV FOREIGN KEY (MaKV) REFERENCES KhuVuc(MaKV)
+);
+
+CREATE TABLE KhachHang (
+    MaKH INT PRIMARY KEY AUTO_INCREMENT,
+    HoTen VARCHAR(100) NOT NULL,
+    GioiTinh CHAR(1),
+    CHECK (GioiTinh IN ('M', 'F')),
+    SoDienThoai VARCHAR(15) NOT NULL,
+    DiaChi VARCHAR(255) NOT NULL,
+    LoaiKH VARCHAR(20),
+    CHECK (LoaiKH IN ('Ca nhan', 'Ung dung'))
+);
+
+CREATE TABLE DonHang (
+    MaDH INT PRIMARY KEY AUTO_INCREMENT,
+    ThoiGianTao DATETIME NOT NULL,
+    SoLuongMonHoanTat INT CHECK (SoLuongMonHoanTat >= 0),
+    TongGiaTri DECIMAL(10, 2) CHECK (TongGiaTri >= 0),
+    ThoiGianThanhToan DATETIME,
+    PhuongPhapThanhToan VARCHAR(50),
+    TinhTrang VARCHAR(50),
+    GhiChu TEXT,
+    LoaiDH VARCHAR(20),
+    CHECK (LoaiDH IN ('Dat truoc', 'Khong dat truoc')),
+    NgayGhiNhan DATE,
+    MaKH INT,
+    CONSTRAINT FK_DH_KH FOREIGN KEY (MaKH)
+        REFERENCES KhachHang(MaKH)
+);
+
+CREATE TABLE DonHangTheoMon (
+    MaSoDot INT PRIMARY KEY AUTO_INCREMENT,
+    MaDH INT,
+    GiaBanCuoiCung DECIMAL(10, 2) NOT NULL,
+    SoLuong INT CHECK (SoLuong > 0),
+    CONSTRAINT FK_DHM_DH FOREIGN KEY (MaDH)
+        REFERENCES DonHang(MaDH)
+);
+
+CREATE TABLE CongThuc (
+    MaCT INT PRIMARY KEY AUTO_INCREMENT,
+    TenCT VARCHAR(100) NOT NULL,
+    MoTa TEXT
+);
+
+CREATE TABLE MonAn (
+    MaMA INT PRIMARY KEY AUTO_INCREMENT,
+    TenMA VARCHAR(100) NOT NULL,
+    LoaiMA VARCHAR(50),
+    DonGia DECIMAL(10, 2) CHECK (DonGia > 0),
+    ThoiGianCapNhat DATETIME,
+    CongThuc INT,
+    CONSTRAINT FK_MA_CT FOREIGN KEY (CongThuc)
+        REFERENCES CongThuc(MaCT)
+);
+
+CREATE TABLE NguyenLieu (
+    MaNL INT PRIMARY KEY AUTO_INCREMENT,
+    TenHangHoa VARCHAR(100) NOT NULL,
+    LoSanXuat VARCHAR(50),
+    SoLuongTrongKho INT CHECK (SoLuongTrongKho >= 0)
+);
+
+CREATE TABLE NhaCungCap (
+    TenNCC VARCHAR(100) PRIMARY KEY,
+    DiaChi VARCHAR(255) NOT NULL,
+    ThongTinLienLac VARCHAR(100),
+    QuyTrinhKiemTra TEXT
+);
+
+CREATE TABLE NhapKho (
+    MaNK INT PRIMARY KEY AUTO_INCREMENT,
+    MaNL INT,
+    ThoiGianNhap DATETIME NOT NULL,
+    SoLuongNhap INT CHECK (SoLuongNhap > 0),
+    MaNVK INT,
+    CONSTRAINT FK_NK_NL FOREIGN KEY (MaNL)
+        REFERENCES NguyenLieu(MaNL),
+    CONSTRAINT FK_NK_NV FOREIGN KEY (MaNVK)
+        REFERENCES NhanVien(MaNV)
+);
+
+CREATE TABLE Ngay (
+    Ngay DATE PRIMARY KEY
+);
+
+CREATE TABLE BaoCaoDoanhThu (
+    Ngay DATE PRIMARY KEY,
+    TongDoanhThu DECIMAL(10, 2),
+    TongSoDonHang INT CHECK (TongSoDonHang >= 0),
+    TongSoMon INT CHECK (TongSoMon >= 0)
+);
+
+CREATE TABLE BaoCaoSoLuongMon (
+    Ngay DATE PRIMARY KEY,
+    SoLuongDaBan INT CHECK (SoLuongDaBan >= 0),
+    DoanhThuCuaMon DECIMAL(10, 2)
+);
