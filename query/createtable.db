@@ -351,50 +351,136 @@ CREATE TABLE Ban (
 );
 
 -- View hiện ra những bàn bị chiếm, tự cập nhật khi có đơn hàng mới
-CREATE OR REPLACE VIEW ViewDonHangThoiGianThuc AS
-SELECT 
-    dh.MaDH,
-    dh.ThoiGianTao,
-    dh.SoLuongMonHoanTat,
-    dh.TongGiaTri,
-    dh.ThoiGianThanhToan,
-    dh.PhuongPhapThanhToan,
-    dh.TinhTrang,
-    dh.GhiChu,
-    dh.LoaiDH,
-    dh.NgayGhiNhan,
-    dh.MaKH,
-    dh.ThoiGianHenGiao,
-    dh.ThoiGianDatBan,
-    dh.LyDoHuy,
-    kv.TenKhuVuc,
-    b.MaBan,
-    b.SoGhe
-FROM 
-    DonHang dh
-JOIN 
-    KhuVuc kv ON dh.MaKhuVuc = kv.MaKhuVuc
-JOIN 
-    Ban b ON dh.MaKhuVuc = b.MaKhuVuc AND dh.MaBan = b.MaBan
-WHERE 
-    dh.TinhTrang = 'Dang phục vụ' AND        -- Chỉ hiển thị các đơn hàng đang phục vụ
-    dh.LoaiDH = 'An tai cho' AND             -- Chỉ lấy các đơn hàng ăn tại chỗ
-    dh.MaKhuVuc IS NOT NULL AND              -- Đảm bảo mã khu vực không NULL
-    dh.MaBan IS NOT NULL;                    -- Đảm bảo mã bàn không NULL
+DELIMITER //
+CREATE FUNCTION GetDonHangDangPhucVu()
+RETURNS TABLE (
+    MaDH INT,
+    ThoiGianTao DATETIME,
+    SoLuongMonHoanTat INT,
+    TongGiaTri DECIMAL(10, 2),
+    ThoiGianThanhToan DATETIME,
+    PhuongPhapThanhToan VARCHAR(50),
+    TinhTrang VARCHAR(50),
+    GhiChu TEXT,
+    LoaiDH VARCHAR(20),
+    NgayGhiNhan DATE,
+    MaKH INT,
+    ThoiGianHenGiao DATETIME,
+    ThoiGianDatBan DATETIME,
+    LyDoHuy TEXT,
+    TenKhuVuc VARCHAR(255),
+    MaBan INT,
+    SoGhe INT
+)
+BEGIN
+    RETURN (
+        SELECT 
+            dh.MaDH,
+            dh.ThoiGianTao,
+            dh.SoLuongMonHoanTat,
+            dh.TongGiaTri,
+            dh.ThoiGianThanhToan,
+            dh.PhuongPhapThanhToan,
+            dh.TinhTrang,
+            dh.GhiChu,
+            dh.LoaiDH,
+            dh.NgayGhiNhan,
+            dh.MaKH,
+            dh.ThoiGianHenGiao,
+            dh.ThoiGianDatBan,
+            dh.LyDoHuy,
+            kv.TenKhuVuc,
+            b.MaBan,
+            b.SoGhe
+        FROM 
+            DonHang dh
+        JOIN 
+            KhuVuc kv ON dh.MaKhuVuc = kv.MaKhuVuc
+        JOIN 
+            Ban b ON dh.MaKhuVuc = b.MaKhuVuc AND dh.MaBan = b.MaBan
+        WHERE 
+            dh.TinhTrang = 'Dang phục vụ' AND
+            dh.LoaiDH = 'An tai cho' AND
+            dh.MaKhuVuc IS NOT NULL AND
+            dh.MaBan IS NOT NULL
+    );
+END;
+//
+DELIMITER ;
 
 -- view lấu bàn chưa bị chiếm
-CREATE OR REPLACE VIEW ViewBanChuaBiChiem AS
-SELECT 
-    b.MaBan,
-    b.SoGhe,
-    kv.TenKhuVuc
-FROM 
-    Ban b
-JOIN 
-    KhuVuc kv ON b.MaKhuVuc = kv.MaKhuVuc
-LEFT JOIN 
-    DonHang dh ON b.MaKhuVuc = dh.MaKhuVuc AND b.MaBan = dh.MaBan AND dh.TinhTrang = 'Dang phục vụ'
-WHERE 
-    dh.MaDH IS NULL;  -- Chỉ lấy những bàn không có đơn hàng đang phục vụ
+DELIMITER //
+CREATE FUNCTION GetBanChuaBiChiem()
+RETURNS TABLE (
+    MaBan INT,
+    SoGhe INT,
+    TenKhuVuc VARCHAR(255)
+)
+BEGIN
+    RETURN (
+        SELECT 
+            b.MaBan,
+            b.SoGhe,
+            kv.TenKhuVuc
+        FROM 
+            Ban b
+        JOIN 
+            KhuVuc kv ON b.MaKhuVuc = kv.MaKhuVuc
+        LEFT JOIN 
+            DonHang dh ON b.MaKhuVuc = dh.MaKhuVuc AND b.MaBan = dh.MaBan AND dh.TinhTrang = 'Dang phục vụ'
+        WHERE 
+            dh.MaDH IS NULL
+    );
+END;
+//
+DELIMITER ;
 
+-- Bảng ThucThi
+CREATE TABLE ThucThi (
+    MaMon INT,                                           -- Mã món ăn
+    MaNVBep INT,                                        -- Mã nhân viên bếp
+    MaNVPhucVu INT,                                     -- Mã nhân viên phục vụ
+    ThoiGianNhan DATETIME DEFAULT CURRENT_TIMESTAMP,   -- Thời gian nhận món
+    ThoiGianHoanTat DATETIME,                           -- Thời gian hoàn tất
+    Status VARCHAR(50),                                  -- Trạng thái món ăn (Hoàn Thành, Đang Chuẩn Bị, Huỷ, ...)
+    PRIMARY KEY (MaMon, MaNVBep, ThoiGianNhan),        -- Khóa chính kết hợp
+    CONSTRAINT FK_ThucThi_Mon FOREIGN KEY (MaMon) 
+        REFERENCES MonAn(MaMon) ON DELETE CASCADE,     -- Ràng buộc khóa ngoại với bảng món ăn
+    CONSTRAINT FK_ThucThi_NhanVienBep FOREIGN KEY (MaNVBep) 
+        REFERENCES NhanVienBep(MaNV) ON DELETE CASCADE, -- Ràng buộc khóa ngoại với bảng nhân viên bếp
+    CONSTRAINT FK_ThucThi_NhanVienPhucVu FOREIGN KEY (MaNVPhucVu) 
+        REFERENCES PhucVu(MaNV) ON DELETE CASCADE      -- Ràng buộc khóa ngoại với bảng nhân viên phục vụ
+);
 
+-- Hàm cho đầu bếp
+DELIMITER //
+CREATE FUNCTION GetMonAnTuDonHangDangPhucVu()
+RETURNS TABLE (
+    MaMon INT,
+    TenDauBep VARCHAR(255),
+    ThoiGianNhan DATETIME,
+    ThoiGianHoanTat DATETIME,
+    MaNVPhucVu INT,
+    Status VARCHAR(50),
+    MaDH INT  -- Mã đơn hàng
+)
+BEGIN
+    RETURN (
+        SELECT 
+            t.MaMon,
+            t.TenDauBep,
+            t.ThoiGianNhan,
+            t.ThoiGianHoanTat,
+            t.MaNVPhucVu,
+            t.Status,
+            dh.MaDH
+        FROM 
+            ThucThi t
+        JOIN 
+            DonHang dh ON t.MaMon = dh.MaDH 
+        WHERE 
+            dh.TinhTrang = 'Dang phục vụ'  -- Lọc các đơn hàng đang phục vụ
+    );
+END;
+//
+DELIMITER ;
