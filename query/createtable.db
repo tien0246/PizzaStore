@@ -7,7 +7,7 @@ CREATE TABLE NhanVien (
     CHECK (GioiTinh IN ('M', 'F')),
     SoDienThoai VARCHAR(15) NOT NULL,
     DiaChi VARCHAR(255) NOT NULL,
-    MaQL INT,
+    MaQL INT, -- chỗ này nếu sửa lại các thực thể thì cần, còn bh hơi kì
     LoaiNV VARCHAR(20),
     CHECK (LoaiNV IN ('Toan thoi gian', 'Ban thoi gian')),
     ChucNang VARCHAR(50),
