@@ -11,7 +11,8 @@ CREATE TABLE NhanVien (
     LoaiNV VARCHAR(20),
     CHECK (LoaiNV IN ('Toan thoi gian', 'Ban thoi gian')),
     ChucNang VARCHAR(50),
-    ChuyenMon VARCHAR(50)
+    ChuyenMon VARCHAR(50),
+    NgayBatDau DATE
 );
 
 CREATE TABLE NhanVienBanThoiGian (
@@ -494,10 +495,142 @@ DELIMITER ;
 
 
 
+-- hàm xem thông tin nhân viên quản lý phòng ban:
+DELIMITER //
+CREATE FUNCTION GetDepartmentManagers()
+RETURNS TABLE (
+    MaPB INT,
+    TenPB VARCHAR(100),
+    MaQL INT,            -- Mã nhân viên quản lý
+    TenQL VARCHAR(100),  -- Tên người quản lý
+    NgayBatDau DATE      -- Ngày bắt đầu của người quản lý
+)
+BEGIN
+    RETURN (
+        SELECT 
+            pb.MaPB,
+            pb.TenPB,
+            nv.MaNV AS MaQL,  -- Mã nhân viên quản lý
+            nv.HoTen AS TenQL,  -- Tên người quản lý
+            ql.NgayBatDau       -- Ngày bắt đầu của người quản lý
+        FROM 
+            PhongBan pb
+        LEFT JOIN 
+            QuanLy ql ON pb.MaPB = ql.MaPB  -- Kết nối với bảng QuanLy
+        LEFT JOIN 
+            NhanVien nv ON ql.MaNV = nv.MaNV  -- Kết nối với bảng NhanVien
+        WHERE 
+            ql.NgayBatDau = (
+                SELECT MAX(NgayBatDau)
+                FROM QuanLy
+                WHERE MaPB = pb.MaPB
+            )
+    );
+END;
+//
+DELIMITER ;
+
+-- hàm đếm số nhân viên từ phòng ban, thừa kế hàm GetDepartmentManagers()
+DELIMITER //
+CREATE FUNCTION GetDepartmentInfo()
+RETURNS TABLE (
+    MaPB INT,
+    TenPB VARCHAR(100),
+    MaQL INT,
+    TenQL VARCHAR(100),
+    NgayBatDau DATE,
+    SoNhanVien INT  -- Số lượng nhân viên
+)
+BEGIN
+    RETURN (
+        SELECT 
+            dm.MaPB,
+            dm.TenPB,
+            dm.MaQL,
+            dm.TenQL,
+            dm.NgayBatDau,
+            (SELECT COUNT(*) 
+             FROM NhanVien nv 
+             WHERE nv.MaQL = dm.MaQL) AS SoNhanVien  -- Đếm số nhân viên do người quản lý này quản lý
+        FROM 
+            GetDepartmentManagers() dm  -- Sử dụng hàm GetDepartmentManagers như một bảng
+    );
+END;
+//
+DELIMITER ;
 
 
--- trigger sửa id nv
+-- hàm hiển thị thông tin chi tiết của NV
+DELIMITER //
+CREATE FUNCTION GetEmployeeDetails(employeeId INT)
+RETURNS TABLE (
+    MaNV INT,
+    HoTen VARCHAR(100),
+    LoaiNV VARCHAR(20),
+    LuongCoBan DECIMAL(10, 2),
+    LuongTheoGio DECIMAL(10, 2),
+    NgayBatDau DATE,
+    CaLam VARCHAR(50),
+    TenQL VARCHAR(100),  -- Tên người quản lý
+    TenPB VARCHAR(100)    -- Tên phòng ban
+)
+BEGIN
+    DECLARE employeeType VARCHAR(20);
+  
+    -- Lấy loại nhân viên
+    SELECT LoaiNV INTO employeeType FROM NhanVien WHERE MaNV = employeeId;
 
+    -- Kiểm tra loại nhân viên và lấy thông tin tương ứng
+    IF employeeType = 'Toan thoi gian' THEN
+        RETURN (
+            SELECT 
+                nv.MaNV,
+                nv.HoTen,
+                nv.LoaiNV,
+                nth.LuongCoBan,
+                NULL AS LuongTheoGio,
+                nv.NgayBatDau,
+                NULL AS CaLam,
+                dm.TenQL,  -- Tên người quản lý từ hàm GetDepartmentManagers
+                dm.TenPB    -- Tên phòng ban từ hàm GetDepartmentManagers
+            FROM 
+                NhanVien nv
+            JOIN 
+                NhanVienToanThoiGian nth ON nv.MaNV = nth.MaNV
+            LEFT JOIN 
+                (SELECT * FROM GetDepartmentManagers() WHERE MaPB = nv.MaPB) AS dm ON 1=1
+            WHERE 
+                nv.MaNV = employeeId
+        );
+    ELSEIF employeeType = 'Ban thoi gian' THEN
+        RETURN (
+            SELECT 
+                nv.MaNV,
+                nv.HoTen,
+                nv.LoaiNV,
+                NULL AS LuongCoBan,
+                nb.LuongTheoGio,
+                nv.NgayBatDau,
+                cl.Ca AS CaLam,
+                dm.TenQL,  -- Tên người quản lý từ hàm GetDepartmentManagers
+                dm.TenPB    -- Tên phòng ban từ hàm GetDepartmentManagers
+            FROM 
+                NhanVien nv
+            JOIN 
+                NhanVienBanThoiGian nb ON nv.MaNV = nb.MaNV
+            LEFT JOIN 
+                CaLam cl ON nv.MaNV = cl.MaNV
+            LEFT JOIN 
+                (SELECT * FROM GetDepartmentManagers() WHERE MaPB = nv.MaPB) AS dm ON 1=1
+            WHERE 
+                nv.MaNV = employeeId
+        );
+    ELSE
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nhan vien khong ton tai hoac khong co loai nhan vien'; 
+    END IF;
+END;
+//
+DELIMITER ;
 
 
 
