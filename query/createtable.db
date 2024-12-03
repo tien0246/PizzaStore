@@ -30,6 +30,13 @@ CREATE TABLE CaLam (
     MaNV INT
 );
 
+CREATE TABLE NhanVienToanThoiGian (
+    MaNV INT PRIMARY KEY,
+    LuongCoBan DECIMAL(10, 2),
+    CONSTRAINT FK_NhanVien_ToanThoiGian FOREIGN KEY (MaNV)
+        REFERENCES NhanVien(MaNV) ON DELETE CASCADE
+);
+
 -- Alter thêm nhân viên sau khi có ca làm 
 ALTER TABLE CaLam
 ADD CONSTRAINT FK_CaLamViec_NhanVien FOREIGN KEY (MaNV)
@@ -484,3 +491,13 @@ BEGIN
 END;
 //
 DELIMITER ;
+
+
+
+
+
+-- trigger sửa id nv
+
+
+
+
