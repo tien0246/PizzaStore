@@ -6,13 +6,15 @@ CREATE TABLE NhanVien (
     GioiTinh CHAR(1),
     CHECK (GioiTinh IN ('M', 'F')),
     SoDienThoai VARCHAR(15) NOT NULL,
-    DiaChi VARCHAR(255) NOT NULL,
-    MaQL INT, -- chỗ này nếu sửa lại các thực thể thì cần, còn bh hơi kì
+    SoNha VARCHAR(255),
+    Duong VARCHAR(255),
+    Xa VARCHAR(255) NOT NULL,
+    Huyen VARCHAR(255) NOT NULL,
+    Tinh VARCHAR(255) NOT NULL,
+    MaPB INT,
     LoaiNV VARCHAR(20),
     CHECK (LoaiNV IN ('Toan thoi gian', 'Ban thoi gian')),
-    ChucNang VARCHAR(50),
-    ChuyenMon VARCHAR(50),
-    NgayBatDau DATE
+    ChucNang VARCHAR(255)
 );
 
 CREATE TABLE NhanVienBanThoiGian (
@@ -28,8 +30,18 @@ CREATE TABLE CaLam (
     Tuan INT NOT NULL,
     Thu INT NOT NULL,
     Ca VARCHAR(50) NOT NULL,
-    MaNV INT
 );
+
+CREATE TABLE ChiaTheo (
+    MaNV INT,
+    MaCa INT,
+    PRIMARY KEY (MaNV, MaCa),
+    CONSTRAINT FK_ChiaTheo_NhanVien FOREIGN KEY (MaNV)
+        REFERENCES NhanVienBanThoiGian(MaNV) ON DELETE CASCADE,
+    CONSTRAINT FK_ChiaTheo_CaLam FOREIGN KEY (MaCa)
+        REFERENCES CaLam(MaCa) ON DELETE CASCADE
+);
+
 
 CREATE TABLE NhanVienToanThoiGian (
     MaNV INT PRIMARY KEY,
@@ -38,7 +50,6 @@ CREATE TABLE NhanVienToanThoiGian (
         REFERENCES NhanVien(MaNV) ON DELETE CASCADE
 );
 
--- Alter thêm nhân viên sau khi có ca làm 
 ALTER TABLE CaLam
 ADD CONSTRAINT FK_CaLamViec_NhanVien FOREIGN KEY (MaNV)
     REFERENCES NhanVienBanThoiGian(MaNV) ON DELETE CASCADE;

@@ -1,5 +1,5 @@
 <?php
-require '../db.php';
+require './connection.php';
 
 $action = $_POST['action'] ?? $_GET['action'] ?? null;
 
