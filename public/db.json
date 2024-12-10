@@ -1,0 +1,105 @@
+{
+    "orders": [
+        {
+            "orderId": 1,
+            "customerId": 1,
+            "status": "waiting",
+            "timeReceived": "10:00:04 10/06/2024 ",
+            "timeCompleted": null
+        },
+        {
+            "orderId": 2,
+            "customerId": 2,
+            "status": "waiting",
+            "timeReceived": "10:05:06 10/06/2024",
+            "timeCompleted": null
+        },
+        {
+            "orderId": 3,
+            "customerId": 3,
+            "status": "waiting",
+            "timeReceived": "10:10:10 10/06/2024",
+            "timeCompleted": null
+        }
+    ],
+    "customers": [
+        {
+            "customerId": 1,
+            "name": "Nguyễn Văn Tèo"
+        },
+        {
+            "customerId": 2,
+            "name": "Nguyễn Thị Uyên"
+        }
+    ],
+    "foods": [
+        {
+            "foodId": 1,
+            "name": "Rượu 3000 năm",
+            "personInCharge": [
+                "Nguyễn Văn A"
+            ]
+        },
+        {
+            "foodId": 2,
+            "name": "Pizza cừu",
+            "personInCharge": [
+                "Nguyễn Văn B",
+                "Nguyễn Văn C"
+            ]
+        },
+        {
+            "foodId": 3,
+            "name": "Pizza cá sấu",
+            "personInCharge": [
+                "Nguyễn Văn D",
+                "Nguyễn Văn E",
+                "Nguyễn Văn F"
+            ]
+        }
+    ],
+    "orderDetails": [
+        {
+            "orderId": 1,
+            "foodId": 1,
+            "quantity": 2,
+            "status": "done"
+        },
+        {
+            "orderId": 1,
+            "foodId": 2,
+            "quantity": 1,
+            "status": "waiting"
+        },
+        {
+            "orderId": 2,
+            "foodId": 1,
+            "quantity": 3,
+            "status": "waiting"
+        },
+        {
+            "orderId": 2,
+            "foodId": 2,
+            "quantity": 2,
+            "status": "waiting"
+        },
+        {
+            "orderId": 3,
+            "foodId": 1,
+            "quantity": 1,
+            "status": "waiting"
+        },
+        {
+            "orderId": 3,
+            "foodId": 2,
+            "quantity": 1,
+            "status": "waiting"
+        },
+        {
+            "orderId": 1,
+            "foodId": 3,
+            "quantity": 4,
+            "status": "waiting"
+        }
+    ]
+}
