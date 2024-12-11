@@ -193,21 +193,42 @@ CREATE TABLE DonHang (
     TongGiaTri DECIMAL(10, 2) CHECK (TongGiaTri >= 0),
     ThoiGianThanhToan DATETIME,
     PhuongPhapThanhToan VARCHAR(50),
-    TinhTrang VARCHAR(50) DEFAULT 'Dang xu ly',  -- Trạng thái mặc định
+    TinhTrang VARCHAR(50) DEFAULT 'Dang xu ly', 
     GhiChu TEXT,
     LoaiDH VARCHAR(20),
     CHECK (LoaiDH IN ('Dat truoc', 'Khong dat truoc')),
     NgayGhiNhan DATE,
-    MaKH INT NULL,  -- Chấp nhận giá trị NULL
+    MaKH INT NULL,  
     ThoiGianHenGiao DATETIME,  -- Thời gian hẹn giao
     ThoiGianDatBan DATETIME,  -- Thời gian khách đặt bàn
     LyDoHuy TEXT,  -- Lý do huỷ
-    MaKhuVuc INT,  -- Mã khu vực
-    MaBan INT,     -- Mã bàn
     CONSTRAINT FK_DH_KH FOREIGN KEY (MaKH)
         REFERENCES KhachHang(MaKH) ON DELETE SET NULL,
-    CONSTRAINT FK_DH_Ban FOREIGN KEY (MaKhuVuc, MaBan) 
-        REFERENCES Ban(MaKhuVuc, MaBan) ON DELETE CASCADE  -- Ràng buộc khóa ngoại
+);
+
+CREATE TABLE NoiPhucVu (
+    MaDH INT NOT NULL,  
+    MaKhuVuc INT NOT NULL, 
+    MaBan INT NOT NULL,
+    PRIMARY KEY (MaDH, MaKhuVuc),  -- Khóa chính là sự kết hợp giữa MaDH và MaKhuVuc
+    CONSTRAINT FK_NoiphuVu_DonHang FOREIGN KEY (MaDH)
+        REFERENCES DonHang(MaDH) ON DELETE CASCADE,  -- Ràng buộc khóa ngoại đến bảng DonHang
+    CONSTRAINT FK_NoiphuVu_Ban FOREIGN KEY (MaKhuVuc, MaBan) 
+        REFERENCES Ban(MaKhuVuc, MaBan) ON DELETE CASCADE  -- Ràng buộc khóa ngoại đến bảng Ban
+);
+
+CREATE TABLE KhuVuc (
+    MaKhuVuc INT PRIMARY KEY AUTO_INCREMENT,  -- Mã số khu vực, tự động tăng
+    TenKhuVuc VARCHAR(255) NOT NULL            -- Tên khu vực
+);
+
+CREATE TABLE Ban (
+    MaKhuVuc INT,                             -- Mã khu vực, khóa ngoại
+    MaBan INT,                                -- Mã số bàn
+    SoGhe INT NOT NULL,                       -- Số ghế của bàn
+    PRIMARY KEY (MaKhuVuc, MaBan),           -- Khóa chính kết hợp
+    CONSTRAINT FK_Ban_KhuVuc FOREIGN KEY (MaKhuVuc) 
+        REFERENCES KhuVuc(MaKhuVuc) ON DELETE CASCADE  -- Ràng buộc khóa ngoại
 );
 
 -- Trigger tự huỷ đơn đến trễ 30p
@@ -232,13 +253,13 @@ DELIMITER ;
 -- Tao Bang DH theo mon
 CREATE TABLE DonHangChiTietTheoMon (
     MaCTDH INT PRIMARY KEY AUTO_INCREMENT,   -- Mã chi tiết đơn hàng
-    MaDH INT,                                -- Mã đơn hàng
-    MaMon INT,                               -- Mã món ăn
-    TenMon VARCHAR(255),                     -- Tên món ăn
-    SoLuong INT CHECK (SoLuong > 0),        -- Số lượng món ăn
-    Gia DECIMAL(10, 2) CHECK (Gia >= 0),    -- Giá mỗi món
-    GhiChu TEXT,                            -- Ghi chú về món ăn
-    ThoiGianTao DATETIME DEFAULT CURRENT_TIMESTAMP,  -- Thời gian tạo
+    MaDH INT,                                
+    MaMon INT,                               
+    TenMon VARCHAR(255),                     
+    SoLuong INT CHECK (SoLuong > 0),        
+    Gia DECIMAL(10, 2) CHECK (Gia >= 0),    
+    GhiChu TEXT,                            
+    ThoiGianTao DATETIME DEFAULT CURRENT_TIMESTAMP,  
     CONSTRAINT FK_DHCT_DH FOREIGN KEY (MaDH)
         REFERENCES DonHang(MaDH) ON DELETE CASCADE,
     CONSTRAINT FK_DHCT_Mon FOREIGN KEY (MaMon)
@@ -250,7 +271,23 @@ CREATE TABLE MonAn (
     TenMon VARCHAR(100) NOT NULL,          -- Tên món ăn
     DonGiaGoc DECIMAL(10, 2) CHECK (DonGiaGoc >= 0),  -- Đơn giá gốc
     LoaiMon VARCHAR(20) CHECK (LoaiMon IN ('Chinh', 'Trang mieng', 'Nuoc')),  -- Ràng buộc loại món ăn
-    GhiChu TEXT                            -- Ghi chú thêm về món ăn (nếu cần)
+    GhiChu TEXT       ,                     -- Ghi chú thêm về món ăn (nếu cần)
+    TenCT VARCHAR(100)
+);
+
+CREATE TABLE CongThuc (
+    TenCT VARCHAR(100) PRIMARY KEY,          
+    MoTa TEXT,                             
+    FOREIGN KEY (TenCT) REFERENCES MonAn(TenCT) ON DELETE CASCADE 
+);
+
+CREATE TABLE CongThucGomCo (
+    MaNguyenLieu INT NOT NULL,                  
+    TenCT VARCHAR(100) NOT NULL,              
+    LieuLuong DECIMAL(10, 2) NOT NULL,         
+    PRIMARY KEY (MaNguyenLieu, TenCT),          
+    FOREIGN KEY (MaNguyenLieu) REFERENCES NguyenLieu(MaNL) ON DELETE CASCADE,  
+    FOREIGN KEY (TenCT) REFERENCES CongThuc(TenCT) ON DELETE CASCADE  
 );
 
 -- trigger nhập món tính tiền
@@ -291,22 +328,6 @@ END;
 //
 DELIMITER ;
 
-
-CREATE TABLE CongThuc (
-    MaCongThuc INT PRIMARY KEY AUTO_INCREMENT,  -- Mã công thức
-    TenMon VARCHAR(100) NOT NULL,               -- Tên món ăn
-    MoTa TEXT,                                   -- Mô tả công thức
-    FOREIGN KEY (TenMon) REFERENCES MonAn(TenMon) ON DELETE CASCADE  -- Khóa ngoại liên kết với bảng MonAn
-);
-
-CREATE TABLE CongThucGomCo (
-    MaCTGC INT PRIMARY KEY AUTO_INCREMENT,      -- Mã công thức gốc
-    MaNguyenLieu INT NOT NULL,                  -- Mã nguyên liệu, liên kết với bảng NguyenLieu
-    LieuLuong DECIMAL(10, 2) NOT NULL,         -- Liều lượng nguyên liệu
-    MaCongThuc INT,                            -- Mã công thức liên kết
-    FOREIGN KEY (MaNguyenLieu) REFERENCES NguyenLieu(MaNL) ON DELETE CASCADE,  -- Khóa ngoại liên kết với bảng NguyenLieu
-    FOREIGN KEY (MaCongThuc) REFERENCES CongThuc(MaCongThuc) ON DELETE CASCADE  -- Khóa ngoại liên kết với bảng CongThuc
-);
 
 -- Hàm hiện món ăn còn đủ nguyên liệu ra 
 DELIMITER //
@@ -377,19 +398,6 @@ END;
 //
 DELIMITER ;
 
-CREATE TABLE KhuVuc (
-    MaKhuVuc INT PRIMARY KEY AUTO_INCREMENT,  -- Mã số khu vực, tự động tăng
-    TenKhuVuc VARCHAR(255) NOT NULL            -- Tên khu vực
-);
-
-CREATE TABLE Ban (
-    MaKhuVuc INT,                             -- Mã khu vực, khóa ngoại
-    MaBan INT,                                -- Mã số bàn
-    SoGhe INT NOT NULL,                       -- Số ghế của bàn
-    PRIMARY KEY (MaKhuVuc, MaBan),           -- Khóa chính kết hợp
-    CONSTRAINT FK_Ban_KhuVuc FOREIGN KEY (MaKhuVuc) 
-        REFERENCES KhuVuc(MaKhuVuc) ON DELETE CASCADE  -- Ràng buộc khóa ngoại
-);
 
 -- View hiện ra những bàn bị chiếm, tự cập nhật khi có đơn hàng mới
 DELIMITER //
@@ -478,19 +486,19 @@ DELIMITER ;
 
 -- Bảng ThucThi
 CREATE TABLE ThucThi (
-    MaMon INT,                                           -- Mã món ăn
-    MaNVBep INT,                                        -- Mã nhân viên bếp
-    MaNVPhucVu INT,                                     -- Mã nhân viên phục vụ
-    ThoiGianNhan DATETIME DEFAULT CURRENT_TIMESTAMP,   -- Thời gian nhận món
-    ThoiGianHoanTat DATETIME,                           -- Thời gian hoàn tất
-    Status VARCHAR(50),                                  -- Trạng thái món ăn (Hoàn Thành, Đang Chuẩn Bị, Huỷ, ...)
-    PRIMARY KEY (MaMon, MaNVBep, ThoiGianNhan),        -- Khóa chính kết hợp
-    CONSTRAINT FK_ThucThi_Mon FOREIGN KEY (MaMon) 
-        REFERENCES MonAn(MaMon) ON DELETE CASCADE,     -- Ràng buộc khóa ngoại với bảng món ăn
+    MaMon INT NOT NULL,                                    
+    MaDH INT NOT NULL,                                     
+    MaNVBep INT,                                          
+    ThoiGianNhan DATETIME DEFAULT CURRENT_TIMESTAMP,      
+    ThoiGianHoanTat DATETIME,                            
+    Status VARCHAR(50),                                    -- Trạng thái món ăn (Hoàn Thành, Đang Chuẩn Bị, Huỷ, ...)
+    PRIMARY KEY (MaMon, MaDH, MaNVBep),                   
+    CONSTRAINT FK_ThucThi_DonHangChiTiet FOREIGN KEY (MaMon, MaDH) 
+        REFERENCES DonHangChiTietTheoMon(MaMon, MaDH) ON DELETE SET NULL,  
     CONSTRAINT FK_ThucThi_NhanVienBep FOREIGN KEY (MaNVBep) 
-        REFERENCES NhanVienBep(MaNV) ON DELETE CASCADE, -- Ràng buộc khóa ngoại với bảng nhân viên bếp
+        REFERENCES NhanVienBep(MaNV) ON DELETE SET NULL,   
     CONSTRAINT FK_ThucThi_NhanVienPhucVu FOREIGN KEY (MaNVPhucVu) 
-        REFERENCES PhucVu(MaNV) ON DELETE CASCADE      -- Ràng buộc khóa ngoại với bảng nhân viên phục vụ
+        REFERENCES PhucVu(MaNV) ON DELETE SET NULL          
 );
 
 -- Hàm cho đầu bếp
