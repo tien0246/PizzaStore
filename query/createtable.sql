@@ -12,9 +12,9 @@ CREATE TABLE NhanVien (
     Huyen VARCHAR(255) NOT NULL,
     Tinh VARCHAR(255) NOT NULL,
     MaPB INT,
-    LoaiNV VARCHAR(20),
+    -- LoaiNV VARCHAR(20),
     CHECK (LoaiNV IN ('Toan thoi gian', 'Ban thoi gian')),
-    ChucNang VARCHAR(255)
+    -- ChucNang VARCHAR(255)
 );
 
 CREATE TABLE NhanVienBanThoiGian (
@@ -35,6 +35,7 @@ CREATE TABLE CaLam (
 CREATE TABLE ChiaTheo (
     MaNV INT,
     MaCa INT,
+    ThoiGianDangKy TIMESTAMP,
     PRIMARY KEY (MaNV, MaCa),
     CONSTRAINT FK_ChiaTheo_NhanVien FOREIGN KEY (MaNV)
         REFERENCES NhanVienBanThoiGian(MaNV) ON DELETE CASCADE,
@@ -64,7 +65,7 @@ CREATE TABLE NhanVienToanThoiGian (
 CREATE TABLE PhongBan (
     MaPB INT PRIMARY KEY AUTO_INCREMENT,
     TenPB VARCHAR(100) UNIQUE NOT NULL,
-    MaNVQuanLy INT,
+    -- MaNVQuanLy INT,
     MaPBQuanLy INT
 );
 
@@ -76,9 +77,9 @@ CREATE TABLE QuanLy (
 );
 
 -- Các alter để ko bị lỗi vòng tròn
-ALTER TABLE NhanVien
-ADD CONSTRAINT FK_QuanLy FOREIGN KEY (MaQL)
-    REFERENCES NhanVien(MaNV) ON DELETE SET NULL;
+-- ALTER TABLE NhanVien
+-- ADD CONSTRAINT FK_QuanLy FOREIGN KEY (MaQL)
+--    REFERENCES NhanVien(MaNV) ON DELETE SET NULL;
 
 ALTER TABLE PhongBan
 ADD CONSTRAINT FK_PB_QL FOREIGN KEY (MaNVQuanLy)
@@ -114,7 +115,6 @@ CREATE TABLE NhanVienBep (
 CREATE TABLE PhucVu (
     MaNV INT PRIMARY KEY,
     ViTri VARCHAR(100),
-    KinhNghiem INT,
     CONSTRAINT FK_NhanVien_PhucVu FOREIGN KEY (MaNV)
         REFERENCES NhanVien(MaNV) ON DELETE CASCADE
 );
@@ -128,26 +128,42 @@ CREATE TABLE NguyenLieu (
 );
 
 CREATE TABLE NhaCungCap (
-    MaNCC INT PRIMARY KEY AUTO_INCREMENT,
+    -- MaNCC INT PRIMARY KEY AUTO_INCREMENT,
     TenNCC VARCHAR(100) NOT NULL,
-    DiaChi VARCHAR(255) NOT NULL,
-    ThongTinLienLac VARCHAR(100),
-    QuyTrinhKiemTra TEXT
+    SoNha VARCHAR(50) NOT NULL,
+    TenDuong VARCHAR(100) NOT NULL,
+    PhuongXa VARCHAR(100) NOT NULL,
+    QuanHuyen VARCHAR(100) NOT NULL,
+    TinhThanh VARCHAR(100) NOT NULL,
+    -- ThongTinLienLac VARCHAR(100),
+    -- QuyTrinhKiemTra TEXT
+);
+
+CREATE TABLE NCC_SDT (
+    TenNCC VARCHAR(100) NOT NULL,
+    SDT VARCHAR(15) NOT NULL,  -- Điều chỉnh kích thước phù hợp với định dạng số điện thoại
+    PRIMARY KEY (TenNCC, SDT)  -- Có thể sử dụng cả hai trường làm khóa chính nếu cần
+);
+
+CREATE TABLE NCC_email (
+    TenNCC VARCHAR(100) NOT NULL,
+    Email VARCHAR(100) NOT NULL,  -- Điều chỉnh kích thước cho phù hợp với định dạng email
+    PRIMARY KEY (TenNCC, Email)   -- Khóa chính có thể là sự kết hợp của cả hai trường
 );
 
 CREATE TABLE CungCap (
-    MaCungCap INT PRIMARY KEY AUTO_INCREMENT,
     MaNL INT,
-    MaNCC INT,
+    TenNCC VARCHAR(100),
     MaNVKiemKho INT,
     SoLuongGiao INT CHECK (SoLuongGiao >= 0),
     SoLuongNhapKho INT CHECK (SoLuongNhapKho >= 0),
     ThoiGian DATETIME NOT NULL,
     LyDoSaiLech TEXT,
+    PRIMARY KEY (TenNCC, MaNL),
     CONSTRAINT FK_CungCap_NguyenLieu FOREIGN KEY (MaNL)
         REFERENCES NguyenLieu(MaNL) ON DELETE CASCADE,
-    CONSTRAINT FK_CungCap_NhaCungCap FOREIGN KEY (MaNCC)
-        REFERENCES NhaCungCap(MaNCC) ON DELETE CASCADE,
+    CONSTRAINT FK_CungCap_NhaCungCap FOREIGN KEY (TenNCC)
+        REFERENCES NhaCungCap(TenNCC) ON DELETE CASCADE,
     CONSTRAINT FK_CungCap_NhanVienKiemKho FOREIGN KEY (MaNVKiemKho)
         REFERENCES NhanVienKiemKho(MaNV) ON DELETE CASCADE
 );
@@ -158,11 +174,17 @@ CREATE TABLE KhachHang (
     GioiTinh CHAR(1),
     CHECK (GioiTinh IN ('M', 'F')),
     SoDienThoai VARCHAR(15) NOT NULL,
-    DiaChi VARCHAR(255) NOT NULL,
+    SoNha VARCHAR(50) NOT NULL,         
+    TenDuong VARCHAR(100) NOT NULL,     
+    PhuongXa VARCHAR(100) NOT NULL,     
+    QuanHuyen VARCHAR(100) NOT NULL,     
+    TinhThanh VARCHAR(100) NOT NULL,    
     LoaiKH VARCHAR(20),
     CHECK (LoaiKH IN ('Ca nhan', 'Ung dung')),
-    NamSinh YEAR
+    NgaySinh DATE,                     
+    CCCD VARCHAR(12) NOT NULL          
 );
+
 
 CREATE TABLE DonHang (
     MaDH INT PRIMARY KEY AUTO_INCREMENT,
