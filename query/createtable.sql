@@ -29,7 +29,7 @@ CREATE TABLE CaLam (
     Nam INT NOT NULL,
     Tuan INT NOT NULL,
     Thu INT NOT NULL,
-    Ca VARCHAR(50) NOT NULL,
+    Ca ENUM('sang', 'toi') NOT NULL
 );
 
 CREATE TABLE ChiaTheo (
