@@ -85,6 +85,10 @@ CREATE TABLE QuanLy (
 -- ADD CONSTRAINT FK_PB_QL FOREIGN KEY (MaNVQuanLy)
 --     REFERENCES NhanVien(MaNV);
 
+ALTER TABLE NhanVien
+ADD CONSTRAINT FK_NhanVien_PhongBan FOREIGN KEY (MaPB) 
+    REFERENCES PhongBan(MaPB);
+
 ALTER TABLE PhongBan
 ADD CONSTRAINT FK_PB_PB FOREIGN KEY (MaPBQuanLy)
     REFERENCES PhongBan(MaPB);
@@ -237,7 +241,8 @@ CREATE TABLE MonAn (
     DonGiaGoc DECIMAL(10, 2) CHECK (DonGiaGoc >= 0),  -- Đơn giá gốc
     LoaiMon VARCHAR(20) CHECK (LoaiMon IN ('Chinh', 'Trang mieng', 'Nuoc')),  -- Ràng buộc loại món ăn
     GhiChu TEXT       ,                     -- Ghi chú thêm về món ăn (nếu cần)
-    TenCT VARCHAR(100)
+    TenCT VARCHAR(100),
+    UNIQUE (TenCT) 
 );
 
 -- Tao Bang DH theo mon
