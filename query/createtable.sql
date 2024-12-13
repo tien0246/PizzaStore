@@ -11,7 +11,7 @@ CREATE TABLE NhanVien (
     Xa VARCHAR(255) NOT NULL,
     Huyen VARCHAR(255) NOT NULL,
     Tinh VARCHAR(255) NOT NULL,
-    MaPB INT,
+    MaPB INT
     -- LoaiNV VARCHAR(20),
     -- CHECK (LoaiNV IN ('Toan thoi gian', 'Ban thoi gian')),
     -- ChucNang VARCHAR(255)
@@ -51,9 +51,9 @@ CREATE TABLE NhanVienToanThoiGian (
         REFERENCES NhanVien(MaNV) ON DELETE CASCADE
 );
 
-ALTER TABLE CaLam
-ADD CONSTRAINT FK_CaLamViec_NhanVien FOREIGN KEY (MaNV)
-    REFERENCES NhanVienBanThoiGian(MaNV) ON DELETE CASCADE;
+-- ALTER TABLE CaLam
+-- ADD CONSTRAINT FK_CaLamViec_NhanVien FOREIGN KEY (MaNV)
+--     REFERENCES NhanVienBanThoiGian(MaNV) ON DELETE CASCADE;
 
 CREATE TABLE NhanVienToanThoiGian (
     MaNV INT PRIMARY KEY,
@@ -81,9 +81,9 @@ CREATE TABLE QuanLy (
 -- ADD CONSTRAINT FK_QuanLy FOREIGN KEY (MaQL)
 --    REFERENCES NhanVien(MaNV) ON DELETE SET NULL;
 
-ALTER TABLE PhongBan
-ADD CONSTRAINT FK_PB_QL FOREIGN KEY (MaNVQuanLy)
-    REFERENCES NhanVien(MaNV);
+-- ALTER TABLE PhongBan
+-- ADD CONSTRAINT FK_PB_QL FOREIGN KEY (MaNVQuanLy)
+--     REFERENCES NhanVien(MaNV);
 
 ALTER TABLE PhongBan
 ADD CONSTRAINT FK_PB_PB FOREIGN KEY (MaPBQuanLy)
@@ -129,12 +129,12 @@ CREATE TABLE NguyenLieu (
 
 CREATE TABLE NhaCungCap (
     -- MaNCC INT PRIMARY KEY AUTO_INCREMENT,
-    TenNCC VARCHAR(100) NOT NULL,
+    TenNCC VARCHAR(100) PRIMARY KEY,
     SoNha VARCHAR(50) NOT NULL,
     TenDuong VARCHAR(100) NOT NULL,
     PhuongXa VARCHAR(100) NOT NULL,
     QuanHuyen VARCHAR(100) NOT NULL,
-    TinhThanh VARCHAR(100) NOT NULL,
+    TinhThanh VARCHAR(100) NOT NULL
     -- ThongTinLienLac VARCHAR(100),
     -- QuyTrinhKiemTra TEXT
 );
@@ -203,18 +203,7 @@ CREATE TABLE DonHang (
     ThoiGianDatBan DATETIME,  -- Thời gian khách đặt bàn
     LyDoHuy TEXT,  -- Lý do huỷ
     CONSTRAINT FK_DH_KH FOREIGN KEY (MaKH)
-        REFERENCES KhachHang(MaKH) ON DELETE SET NULL,
-);
-
-CREATE TABLE NoiPhucVu (
-    MaDH INT NOT NULL,  
-    MaKhuVuc INT NOT NULL, 
-    MaBan INT NOT NULL,
-    PRIMARY KEY (MaDH, MaKhuVuc),  -- Khóa chính là sự kết hợp giữa MaDH và MaKhuVuc
-    CONSTRAINT FK_NoiphuVu_DonHang FOREIGN KEY (MaDH)
-        REFERENCES DonHang(MaDH) ON DELETE CASCADE,  -- Ràng buộc khóa ngoại đến bảng DonHang
-    CONSTRAINT FK_NoiphuVu_Ban FOREIGN KEY (MaKhuVuc, MaBan) 
-        REFERENCES Ban(MaKhuVuc, MaBan) ON DELETE CASCADE  -- Ràng buộc khóa ngoại đến bảng Ban
+        REFERENCES KhachHang(MaKH) ON DELETE SET NULL
 );
 
 CREATE TABLE KhuVuc (
@@ -231,22 +220,25 @@ CREATE TABLE Ban (
         REFERENCES KhuVuc(MaKhuVuc) ON DELETE CASCADE  -- Ràng buộc khóa ngoại
 );
 
--- PROCEDURE tự huỷ đơn đến trễ 30p
-DELIMITER //
+CREATE TABLE NoiPhucVu (
+    MaDH INT NOT NULL,  
+    MaKhuVuc INT NOT NULL, 
+    MaBan INT NOT NULL,
+    PRIMARY KEY (MaDH, MaKhuVuc),  -- Khóa chính là sự kết hợp giữa MaDH và MaKhuVuc
+    CONSTRAINT FK_NoiphuVu_DonHang FOREIGN KEY (MaDH)
+        REFERENCES DonHang(MaDH) ON DELETE CASCADE,  -- Ràng buộc khóa ngoại đến bảng DonHang
+    CONSTRAINT FK_NoiphuVu_Ban FOREIGN KEY (MaKhuVuc, MaBan) 
+        REFERENCES Ban(MaKhuVuc, MaBan) ON DELETE CASCADE  -- Ràng buộc khóa ngoại đến bảng Ban
+);
 
-CREATE PROCEDURE UpdateExpiredOrders()
-BEGIN
-    -- Cập nhật trạng thái đơn hàng "Đặt trước" bị quá hạn (quá 30 phút từ thời gian đặt bàn)
-    UPDATE DonHang
-    SET TinhTrang = 'Hủy',
-        LyDoHuy = 'Hủy do quá thời gian đặt bàn'
-    WHERE LoaiDH = 'Dat truoc'
-      AND TinhTrang = 'Dang xu ly'
-      AND ThoiGianDatBan < NOW() - INTERVAL 30 MINUTE;
-END;
-//
-DELIMITER ;
-
+CREATE TABLE MonAn (
+    MaMon INT PRIMARY KEY AUTO_INCREMENT,  -- Mã món ăn
+    TenMon VARCHAR(100) NOT NULL,          -- Tên món ăn
+    DonGiaGoc DECIMAL(10, 2) CHECK (DonGiaGoc >= 0),  -- Đơn giá gốc
+    LoaiMon VARCHAR(20) CHECK (LoaiMon IN ('Chinh', 'Trang mieng', 'Nuoc')),  -- Ràng buộc loại món ăn
+    GhiChu TEXT       ,                     -- Ghi chú thêm về món ăn (nếu cần)
+    TenCT VARCHAR(100)
+);
 
 -- Tao Bang DH theo mon
 CREATE TABLE DonHangChiTietTheoMon (
@@ -264,15 +256,6 @@ CREATE TABLE DonHangChiTietTheoMon (
         REFERENCES MonAn(MaMon) ON DELETE CASCADE
 );
 
-CREATE TABLE MonAn (
-    MaMon INT PRIMARY KEY AUTO_INCREMENT,  -- Mã món ăn
-    TenMon VARCHAR(100) NOT NULL,          -- Tên món ăn
-    DonGiaGoc DECIMAL(10, 2) CHECK (DonGiaGoc >= 0),  -- Đơn giá gốc
-    LoaiMon VARCHAR(20) CHECK (LoaiMon IN ('Chinh', 'Trang mieng', 'Nuoc')),  -- Ràng buộc loại món ăn
-    GhiChu TEXT       ,                     -- Ghi chú thêm về món ăn (nếu cần)
-    TenCT VARCHAR(100)
-);
-
 CREATE TABLE CongThuc (
     TenCT VARCHAR(100) PRIMARY KEY,          
     MoTa TEXT,                             
@@ -287,6 +270,22 @@ CREATE TABLE CongThucGomCo (
     FOREIGN KEY (MaNguyenLieu) REFERENCES NguyenLieu(MaNL) ON DELETE CASCADE,  
     FOREIGN KEY (TenCT) REFERENCES CongThuc(TenCT) ON DELETE CASCADE  
 );
+
+-- PROCEDURE tự huỷ đơn đến trễ 30p
+DELIMITER //
+
+CREATE PROCEDURE UpdateExpiredOrders()
+BEGIN
+    -- Cập nhật trạng thái đơn hàng "Đặt trước" bị quá hạn (quá 30 phút từ thời gian đặt bàn)
+    UPDATE DonHang
+    SET TinhTrang = 'Hủy',
+        LyDoHuy = 'Hủy do quá thời gian đặt bàn'
+    WHERE LoaiDH = 'Dat truoc'
+      AND TinhTrang = 'Dang xu ly'
+      AND ThoiGianDatBan < NOW() - INTERVAL 30 MINUTE;
+END;
+//
+DELIMITER ;
 
 -- trigger nhập món tính tiền
 DELIMITER //
