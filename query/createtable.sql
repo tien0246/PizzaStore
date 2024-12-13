@@ -306,20 +306,20 @@ DELIMITER ;
 
 -- Hàm hiện món ăn còn đủ nguyên liệu ra 
 DELIMITER //
-CREATE FUNCTION HienThiMonAnCoSan()
-RETURNS TABLE
+
+CREATE PROCEDURE HienThiMonAnCoSan()
 BEGIN
-    RETURN (
-        SELECT M.MaMon, M.TenMon
-        FROM MonAn M
-        LEFT JOIN CongThuc CT ON M.MaMon = CT.MaMon
-        LEFT JOIN CongThucGomCo CTGC ON CT.MaCongThuc = CTGC.MaCongThuc
-        LEFT JOIN NguyenLieu NL ON CTGC.MaNguyenLieu = NL.MaNL
-        GROUP BY M.MaMon, M.TenMon
-        HAVING SUM(CASE WHEN CTGC.LieuLuong > NL.SoLuongTrongKho THEN 1 ELSE 0 END) = 0
-    );
+    SELECT M.MaMon, M.TenMon
+    FROM MonAn M
+    LEFT JOIN CongThuc CT ON M.TenCT = CT.TenCT
+    LEFT JOIN CongThucGomCo CTGC ON CT.TenCT = CTGC.TenCT
+    LEFT JOIN NguyenLieu NL ON CTGC.MaNguyenLieu = NL.MaNL
+    GROUP BY M.MaMon, M.TenMon
+    HAVING SUM(CASE WHEN CTGC.LieuLuong > NL.SoLuongTrongKho THEN 1 ELSE 0 END) = 0;
 END;
 //
+DELIMITER ;
+
 
 CREATE TABLE BaoCaoDoanhThuTheoNgay (
     Ngay DATE PRIMARY KEY,            -- Ngày báo cáo
@@ -330,7 +330,7 @@ CREATE TABLE BaoCaoDoanhThuTheoNgay (
 
 -- trigger DonHang qua BaoCao
 DELIMITER //
-CREATE TRIGGER AfterInsertDonHang
+CREATE TRIGGER AfterInsertDonHangBaoCao
 AFTER INSERT ON DonHang
 FOR EACH ROW
 BEGIN
@@ -364,8 +364,8 @@ AFTER INSERT ON DonHangChiTietTheoMon
 FOR EACH ROW
 BEGIN
     -- Cập nhật tổng số lượng và tổng doanh thu cho món ăn trong bảng báo cáo
-    INSERT INTO BaoCaoSoLuongMonTheoNgay (Ngay, MaMon, TenMon, TongSoLuong, TongDoanhThu)
-    VALUES (DATE(NEW.ThoiGianTao), NEW.MaMon, NEW.TenMon, NEW.SoLuong, NEW.Gia * NEW.SoLuong)
+    INSERT INTO BaoCaoSoLuongMonTheoNgay (Ngay, MaMon, TongSoLuong, TongDoanhThu)
+    VALUES (DATE(NEW.ThoiGianTao), NEW.MaMon, NEW.SoLuong, NEW.Gia * NEW.SoLuong)
     ON DUPLICATE KEY UPDATE
         TongSoLuong = TongSoLuong + NEW.SoLuong,
         TongDoanhThu = TongDoanhThu + (NEW.Gia * NEW.SoLuong);
@@ -376,88 +376,64 @@ DELIMITER ;
 
 -- View hiện ra những bàn bị chiếm, tự cập nhật khi có đơn hàng mới
 DELIMITER //
-CREATE FUNCTION GetDonHangDangPhucVu()
-RETURNS TABLE (
-    MaDH INT,
-    ThoiGianTao DATETIME,
-    SoLuongMonHoanTat INT,
-    TongGiaTri DECIMAL(10, 2),
-    ThoiGianThanhToan DATETIME,
-    PhuongPhapThanhToan VARCHAR(50),
-    TinhTrang VARCHAR(50),
-    GhiChu TEXT,
-    LoaiDH VARCHAR(20),
-    NgayGhiNhan DATE,
-    MaKH INT,
-    ThoiGianHenGiao DATETIME,
-    ThoiGianDatBan DATETIME,
-    LyDoHuy TEXT,
-    TenKhuVuc VARCHAR(255),
-    MaBan INT,
-    SoGhe INT
-)
+
+CREATE PROCEDURE GetDonHangDangPhucVu()
 BEGIN
-    RETURN (
-        SELECT 
-            dh.MaDH,
-            dh.ThoiGianTao,
-            dh.SoLuongMonHoanTat,
-            dh.TongGiaTri,
-            dh.ThoiGianThanhToan,
-            dh.PhuongPhapThanhToan,
-            dh.TinhTrang,
-            dh.GhiChu,
-            dh.LoaiDH,
-            dh.NgayGhiNhan,
-            dh.MaKH,
-            dh.ThoiGianHenGiao,
-            dh.ThoiGianDatBan,
-            dh.LyDoHuy,
-            kv.TenKhuVuc,
-            b.MaBan,
-            b.SoGhe
-        FROM 
-            DonHang dh
-        JOIN 
-            KhuVuc kv ON dh.MaKhuVuc = kv.MaKhuVuc
-        JOIN 
-            Ban b ON dh.MaKhuVuc = b.MaKhuVuc AND dh.MaBan = b.MaBan
-        WHERE 
-            dh.TinhTrang = 'Dang phục vụ' AND
-            dh.LoaiDH = 'An tai cho' AND
-            dh.MaKhuVuc IS NOT NULL AND
-            dh.MaBan IS NOT NULL
-    );
+    SELECT 
+        dh.MaDH,
+        dh.ThoiGianTao,
+        dh.SoLuongMonHoanTat,
+        dh.TongGiaTri,
+        dh.ThoiGianThanhToan,
+        dh.PhuongPhapThanhToan,
+        dh.TinhTrang,
+        dh.GhiChu,
+        dh.LoaiDH,
+        dh.NgayGhiNhan,
+        dh.MaKH,
+        dh.ThoiGianHenGiao,
+        dh.ThoiGianDatBan,
+        dh.LyDoHuy,
+        kv.TenKhuVuc,
+        b.MaBan,
+        b.SoGhe
+    FROM 
+        DonHang dh
+    JOIN 
+        KhuVuc kv ON dh.MaKhuVuc = kv.MaKhuVuc
+    JOIN 
+        Ban b ON dh.MaKhuVuc = b.MaKhuVuc AND dh.MaBan = b.MaBan
+    WHERE 
+        dh.TinhTrang = 'Dang phục vụ'
+        AND dh.LoaiDH = 'An tai cho'
+        AND dh.MaKhuVuc IS NOT NULL
+        AND dh.MaBan IS NOT NULL;
 END;
 //
 DELIMITER ;
 
+
 -- view lấu bàn chưa bị chiếm
 DELIMITER //
-CREATE FUNCTION GetBanChuaBiChiem()
-RETURNS TABLE (
-    MaBan INT,
-    SoGhe INT,
-    TenKhuVuc VARCHAR(255)
-)
+
+CREATE PROCEDURE GetBanChuaBiChiem()
 BEGIN
-    RETURN (
-        SELECT 
-            b.MaBan,
-            b.SoGhe,
-            kv.TenKhuVuc
-        FROM 
-            Ban b
-        JOIN 
-            KhuVuc kv ON b.MaKhuVuc = kv.MaKhuVuc
-        LEFT JOIN 
-            DonHang dh ON b.MaKhuVuc = dh.MaKhuVuc AND b.MaBan = dh.MaBan AND dh.TinhTrang = 'Dang phục vụ'
-        WHERE 
-            dh.MaDH IS NULL
-    );
+    SELECT 
+        b.MaBan,
+        b.SoGhe,
+        kv.TenKhuVuc
+    FROM 
+        Ban b
+    JOIN 
+        KhuVuc kv ON b.MaKhuVuc = kv.MaKhuVuc
+    LEFT JOIN 
+        DonHang dh ON b.MaKhuVuc = dh.MaKhuVuc AND b.MaBan = dh.MaBan AND dh.TinhTrang = 'Dang phục vụ'
+    WHERE 
+        dh.MaDH IS NULL;
 END;
 //
 DELIMITER ;
+
 
 -- Bảng ThucThi
 CREATE TABLE ThucThi (
@@ -478,99 +454,89 @@ CREATE TABLE ThucThi (
 
 -- Hàm cho đầu bếp
 DELIMITER //
-CREATE FUNCTION GetMonAnTuDonHangDangPhucVu()
-RETURNS TABLE (
-    MaMon INT,
-    TenDauBep VARCHAR(255),
-    ThoiGianNhan DATETIME,
-    ThoiGianHoanTat DATETIME,
-    MaNVPhucVu INT,
-    Status VARCHAR(50),
-    MaDH INT  -- Mã đơn hàng
-)
+
+CREATE PROCEDURE GetMonAnTuDonHangDangPhucVu()
 BEGIN
-    RETURN (
-        SELECT 
-            t.MaMon,
-            t.TenDauBep,
-            t.ThoiGianNhan,
-            t.ThoiGianHoanTat,
-            t.MaNVPhucVu,
-            t.Status,
-            dh.MaDH
-        FROM 
-            ThucThi t
-        JOIN 
-            DonHang dh ON t.MaMon = dh.MaDH 
-        WHERE 
-            dh.TinhTrang = 'Dang phục vụ'  -- Lọc các đơn hàng đang phục vụ
-    );
+    SELECT 
+        t.MaMon,
+        t.TenDauBep,
+        t.ThoiGianNhan,
+        t.ThoiGianHoanTat,
+        t.MaNVPhucVu,
+        t.Status,
+        dh.MaDH
+    FROM 
+        ThucThi t
+    JOIN 
+        DonHang dh ON t.MaMon = dh.MaDH 
+    WHERE 
+        dh.TinhTrang = 'Dang phục vụ';
+END;
+//
+DELIMITER ;
+
+-- hàm xem thông tin nhân viên quản lý phòng ban:
+DELIMITER //
+
+CREATE PROCEDURE GetDepartmentManagers()
+BEGIN
+    SELECT 
+        pb.MaPB,
+        pb.TenPB,
+        nv.MaNV AS MaQL,
+        nv.HoTen AS TenQL,
+        ql.NgayBatDau
+    FROM 
+        PhongBan pb
+    LEFT JOIN 
+        QuanLy ql ON pb.MaPB = ql.MaPB
+    LEFT JOIN 
+        NhanVien nv ON ql.MaNV = nv.MaNV
+    WHERE 
+        ql.NgayBatDau = (
+            SELECT MAX(NgayBatDau)
+            FROM QuanLy
+            WHERE MaPB = pb.MaPB
+        );
 END;
 //
 DELIMITER ;
 
 
-
--- hàm xem thông tin nhân viên quản lý phòng ban:
+-- hàm đếm số nhân viên từ phòng ban, thừa kế hàm GetDepartmentManagers()
 DELIMITER //
-CREATE FUNCTION GetDepartmentManagers()
-RETURNS TABLE (
-    MaPB INT,
-    TenPB VARCHAR(100),
-    MaQL INT,            -- Mã nhân viên quản lý
-    TenQL VARCHAR(100),  -- Tên người quản lý
-    NgayBatDau DATE      -- Ngày bắt đầu của người quản lý
-)
+
+CREATE PROCEDURE GetDepartmentInfo()
 BEGIN
-    RETURN (
-        SELECT 
+    SELECT 
+        dm.MaPB,
+        dm.TenPB,
+        dm.MaQL,
+        dm.TenQL,
+        dm.NgayBatDau,
+        (SELECT COUNT(*) 
+         FROM NhanVien nv 
+         WHERE nv.MaPB = dm.MaPB) AS SoNhanVien
+    FROM 
+        (SELECT 
             pb.MaPB,
             pb.TenPB,
-            nv.MaNV AS MaQL,  -- Mã nhân viên quản lý
-            nv.HoTen AS TenQL,  -- Tên người quản lý
-            ql.NgayBatDau       -- Ngày bắt đầu của người quản lý
-        FROM 
+            nv.MaNV AS MaQL,
+            nv.HoTen AS TenQL,
+            ql.NgayBatDau
+         FROM 
             PhongBan pb
-        LEFT JOIN 
-            QuanLy ql ON pb.MaPB = ql.MaPB  -- Kết nối với bảng QuanLy
-        LEFT JOIN 
-            NhanVien nv ON ql.MaNV = nv.MaNV  -- Kết nối với bảng NhanVien
-        WHERE 
+         LEFT JOIN 
+            QuanLy ql ON pb.MaPB = ql.MaPB
+         LEFT JOIN 
+            NhanVien nv ON ql.MaNV = nv.MaNV
+         WHERE 
             ql.NgayBatDau = (
                 SELECT MAX(NgayBatDau)
                 FROM QuanLy
                 WHERE MaPB = pb.MaPB
             )
-    );
-END;
-//
-DELIMITER ;
-
--- hàm đếm số nhân viên từ phòng ban, thừa kế hàm GetDepartmentManagers()
-DELIMITER //
-CREATE FUNCTION GetDepartmentInfo()
-RETURNS TABLE (
-    MaPB INT,
-    TenPB VARCHAR(100),
-    MaQL INT,
-    TenQL VARCHAR(100),
-    NgayBatDau DATE,
-    SoNhanVien INT  -- Số lượng nhân viên
-)
-BEGIN
-    RETURN (
-        SELECT 
-            dm.MaPB,
-            dm.TenPB,
-            dm.MaQL,
-            dm.TenQL,
-            dm.NgayBatDau,
-            (SELECT COUNT(*) 
-             FROM NhanVien nv 
-             WHERE nv.MaQL = dm.MaQL) AS SoNhanVien  -- Đếm số nhân viên do người quản lý này quản lý
-        FROM 
-            GetDepartmentManagers() dm  -- Sử dụng hàm GetDepartmentManagers như một bảng
-    );
+        ) AS dm;
 END;
 //
 DELIMITER ;
@@ -578,71 +544,81 @@ DELIMITER ;
 
 -- hàm hiển thị thông tin chi tiết của NV
 DELIMITER //
-CREATE FUNCTION GetEmployeeDetails(employeeId INT)
-RETURNS TABLE (
-    MaNV INT,
-    HoTen VARCHAR(100),
-    LoaiNV VARCHAR(20),
-    LuongCoBan DECIMAL(10, 2),
-    LuongTheoGio DECIMAL(10, 2),
-    NgayBatDau DATE,
-    CaLam VARCHAR(50),
-    TenQL VARCHAR(100),  -- Tên người quản lý
-    TenPB VARCHAR(100)    -- Tên phòng ban
-)
+
+CREATE PROCEDURE GetEmployeeDetails(IN employeeId INT)
 BEGIN
     DECLARE employeeType VARCHAR(20);
-  
+    
     -- Lấy loại nhân viên
     SELECT LoaiNV INTO employeeType FROM NhanVien WHERE MaNV = employeeId;
 
-    -- Kiểm tra loại nhân viên và lấy thông tin tương ứng
+    -- Kiểm tra loại nhân viên và trả về kết quả
     IF employeeType = 'Toan thoi gian' THEN
-        RETURN (
-            SELECT 
-                nv.MaNV,
-                nv.HoTen,
-                nv.LoaiNV,
-                nth.LuongCoBan,
-                NULL AS LuongTheoGio,
-                nv.NgayBatDau,
-                NULL AS CaLam,
-                dm.TenQL,  -- Tên người quản lý từ hàm GetDepartmentManagers
-                dm.TenPB    -- Tên phòng ban từ hàm GetDepartmentManagers
-            FROM 
-                NhanVien nv
-            JOIN 
-                NhanVienToanThoiGian nth ON nv.MaNV = nth.MaNV
-            LEFT JOIN 
-                (SELECT * FROM GetDepartmentManagers() WHERE MaPB = nv.MaPB) AS dm ON 1=1
-            WHERE 
-                nv.MaNV = employeeId
-        );
+        SELECT 
+            nv.MaNV,
+            nv.HoTen,
+            nv.LoaiNV,
+            nth.LuongCoBan,
+            NULL AS LuongTheoGio,
+            nv.NgayBatDau,
+            NULL AS CaLam,
+            dm.TenQL,
+            dm.TenPB
+        FROM 
+            NhanVien nv
+        JOIN 
+            NhanVienToanThoiGian nth ON nv.MaNV = nth.MaNV
+        LEFT JOIN 
+            (SELECT 
+                pb.MaPB,
+                pb.TenPB,
+                nv.MaNV AS MaQL,
+                nv.HoTen AS TenQL
+             FROM 
+                PhongBan pb
+             LEFT JOIN 
+                QuanLy ql ON pb.MaPB = ql.MaPB
+             LEFT JOIN 
+                NhanVien nv ON ql.MaNV = nv.MaNV
+            ) AS dm ON dm.MaPB = nv.MaPB
+        WHERE 
+            nv.MaNV = employeeId;
+
     ELSEIF employeeType = 'Ban thoi gian' THEN
-        RETURN (
-            SELECT 
-                nv.MaNV,
-                nv.HoTen,
-                nv.LoaiNV,
-                NULL AS LuongCoBan,
-                nb.LuongTheoGio,
-                nv.NgayBatDau,
-                cl.Ca AS CaLam,
-                dm.TenQL,  -- Tên người quản lý từ hàm GetDepartmentManagers
-                dm.TenPB    -- Tên phòng ban từ hàm GetDepartmentManagers
-            FROM 
-                NhanVien nv
-            JOIN 
-                NhanVienBanThoiGian nb ON nv.MaNV = nb.MaNV
-            LEFT JOIN 
-                CaLam cl ON nv.MaNV = cl.MaNV
-            LEFT JOIN 
-                (SELECT * FROM GetDepartmentManagers() WHERE MaPB = nv.MaPB) AS dm ON 1=1
-            WHERE 
-                nv.MaNV = employeeId
-        );
+        SELECT 
+            nv.MaNV,
+            nv.HoTen,
+            nv.LoaiNV,
+            NULL AS LuongCoBan,
+            nb.LuongTheoGio,
+            nv.NgayBatDau,
+            cl.Ca AS CaLam,
+            dm.TenQL,
+            dm.TenPB
+        FROM 
+            NhanVien nv
+        JOIN 
+            NhanVienBanThoiGian nb ON nv.MaNV = nb.MaNV
+        LEFT JOIN 
+            CaLam cl ON nv.MaNV = cl.MaNV
+        LEFT JOIN 
+            (SELECT 
+                pb.MaPB,
+                pb.TenPB,
+                nv.MaNV AS MaQL,
+                nv.HoTen AS TenQL
+             FROM 
+                PhongBan pb
+             LEFT JOIN 
+                QuanLy ql ON pb.MaPB = ql.MaPB
+             LEFT JOIN 
+                NhanVien nv ON ql.MaNV = nv.MaNV
+            ) AS dm ON dm.MaPB = nv.MaPB
+        WHERE 
+            nv.MaNV = employeeId;
+
     ELSE
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nhan vien khong ton tai hoac khong co loai nhan vien'; 
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Nhan vien khong ton tai hoac khong co loai nhan vien';
     END IF;
 END;
 //
