@@ -13,7 +13,7 @@ CREATE TABLE NhanVien (
     Tinh VARCHAR(255) NOT NULL,
     MaPB INT,
     -- LoaiNV VARCHAR(20),
-    CHECK (LoaiNV IN ('Toan thoi gian', 'Ban thoi gian')),
+    -- CHECK (LoaiNV IN ('Toan thoi gian', 'Ban thoi gian')),
     -- ChucNang VARCHAR(255)
 );
 
@@ -231,31 +231,29 @@ CREATE TABLE Ban (
         REFERENCES KhuVuc(MaKhuVuc) ON DELETE CASCADE  -- Ràng buộc khóa ngoại
 );
 
--- Trigger tự huỷ đơn đến trễ 30p
+-- PROCEDURE tự huỷ đơn đến trễ 30p
 DELIMITER //
-CREATE TRIGGER UpdateStatusAfter30Min
-AFTER INSERT ON DonHang
-FOR EACH ROW
+
+CREATE PROCEDURE UpdateExpiredOrders()
 BEGIN
-    IF NEW.LoaiDH = 'Dat truoc' AND NEW.ThoiGianDatBan IS NOT NULL THEN
-        -- Cập nhật trạng thái đơn hàng sau 30 phút kể từ thời gian khách đặt bàn
-        UPDATE DonHang
-        SET 
-            TinhTrang = 'Huy',
-            LyDoHuy = 'Hủy do quá thời gian đặt bàn'  -- Lý do huỷ
-        WHERE MaDH = NEW.MaDH
-          AND TIMESTAMPDIFF(MINUTE, NEW.ThoiGianDatBan, NOW()) >= 30;
-    END IF;
+    -- Cập nhật trạng thái đơn hàng "Đặt trước" bị quá hạn (quá 30 phút từ thời gian đặt bàn)
+    UPDATE DonHang
+    SET TinhTrang = 'Hủy',
+        LyDoHuy = 'Hủy do quá thời gian đặt bàn'
+    WHERE LoaiDH = 'Dat truoc'
+      AND TinhTrang = 'Dang xu ly'
+      AND ThoiGianDatBan < NOW() - INTERVAL 30 MINUTE;
 END;
 //
 DELIMITER ;
+
 
 -- Tao Bang DH theo mon
 CREATE TABLE DonHangChiTietTheoMon (
     MaCTDH INT PRIMARY KEY AUTO_INCREMENT,   -- Mã chi tiết đơn hàng
     MaDH INT,                                
     MaMon INT,                               
-    TenMon VARCHAR(255),                     
+    -- TenMon VARCHAR(255),                     
     SoLuong INT CHECK (SoLuong > 0),        
     Gia DECIMAL(10, 2) CHECK (Gia >= 0),    
     GhiChu TEXT,                            
@@ -292,41 +290,37 @@ CREATE TABLE CongThucGomCo (
 
 -- trigger nhập món tính tiền
 DELIMITER //
+
 CREATE TRIGGER AfterInsertDonHang
 AFTER INSERT ON DonHang
 FOR EACH ROW
 BEGIN
     DECLARE totalMon INT DEFAULT 0;
     DECLARE totalPrice DECIMAL(10, 2) DEFAULT 0.00;
-    -- Tạo bảng tạm thời
-    CREATE TEMPORARY TABLE MonAnTam (
-        MaMon INT,
-        SoLuong INT,
-        GhiChu TEXT
-    );
-    -- Chèn dữ liệu vào bảng tạm (giả định rằng dữ liệu đã có sẵn)
-    -- Câu lệnh này có thể được thay thế bằng cách khác tùy thuộc vào nguồn dữ liệu
-    INSERT INTO MonAnTam (MaMon, SoLuong, GhiChu)
-    SELECT MaMon, SoLuong, GhiChu
-    FROM <Nguồn dữ liệu>  -- CHỖ NÀY LÀM SAO ĐỂ LẤY DATA TỪ NGƯỜI DÙNG HOẶC KHÁCH CHỌN
-    -- Thêm các món ăn từ bảng tạm vào bảng DonHangChiTietTheoMon
-    INSERT INTO DonHangChiTietTheoMon (MaDH, MaMon, TenMon, SoLuong, Gia, GhiChu)
-    SELECT NEW.MaDH, m.MaMon, m.TenMon, mt.SoLuong, m.DonGiaGoc, mt.GhiChu
-    FROM MonAnTam mt
-    JOIN MonAn m ON mt.MaMon = m.MaMon;
-    -- Tính tổng số món và tổng giá trị
-    SELECT COUNT(*) INTO totalMon, SUM(mt.SoLuong * m.DonGiaGoc) INTO totalPrice
-    FROM MonAnTam mt
-    JOIN MonAn m ON mt.MaMon = m.MaMon;
+
+    -- Tính tổng số món và tổng giá trị của đơn hàng
+    SELECT 
+        COUNT(DISTINCT MaMon), 
+        SUM(SoLuong * Gia)
+    INTO 
+        totalMon, 
+        totalPrice
+    FROM 
+        DonHangChiTietTheoMon
+    WHERE 
+        MaDH = NEW.MaDH;
+
     -- Cập nhật tổng số món và tổng giá trị vào bảng DonHang
     UPDATE DonHang
-    SET SoLuongMonHoanTat = totalMon,
+    SET 
+        SoLuongMonHoanTat = totalMon,
         TongGiaTri = totalPrice
-    WHERE MaDH = NEW.MaDH;
-    -- Bảng tạm sẽ tự động xóa khi phiên làm việc kết thúc
+    WHERE 
+        MaDH = NEW.MaDH;
 END;
 //
 DELIMITER ;
+
 
 
 -- Hàm hiện món ăn còn đủ nguyên liệu ra 
