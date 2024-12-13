@@ -13,7 +13,7 @@ CREATE TABLE NhanVien (
     Tinh VARCHAR(255) NOT NULL,
     MaPB INT,
     -- LoaiNV VARCHAR(20),
-    CHECK (LoaiNV IN ('Toan thoi gian', 'Ban thoi gian')),
+    -- CHECK (LoaiNV IN ('Toan thoi gian', 'Ban thoi gian')),
     -- ChucNang VARCHAR(255)
 );
 
