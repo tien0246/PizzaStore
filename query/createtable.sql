@@ -12,9 +12,6 @@ CREATE TABLE NhanVien (
     Huyen VARCHAR(255) NOT NULL,
     Tinh VARCHAR(255) NOT NULL,
     MaPB INT
-    -- LoaiNV VARCHAR(20),
-    -- CHECK (LoaiNV IN ('Toan thoi gian', 'Ban thoi gian')),
-    -- ChucNang VARCHAR(255)
 );
 
 CREATE TABLE NhanVienBanThoiGian (
@@ -51,10 +48,6 @@ CREATE TABLE NhanVienToanThoiGian (
         REFERENCES NhanVien(MaNV) ON DELETE CASCADE
 );
 
--- ALTER TABLE CaLam
--- ADD CONSTRAINT FK_CaLamViec_NhanVien FOREIGN KEY (MaNV)
---     REFERENCES NhanVienBanThoiGian(MaNV) ON DELETE CASCADE;
-
 CREATE TABLE NhanVienToanThoiGian (
     MaNV INT PRIMARY KEY,
     LuongCoBan DECIMAL(10, 2),
@@ -77,14 +70,6 @@ CREATE TABLE QuanLy (
 );
 
 -- Các alter để ko bị lỗi vòng tròn
--- ALTER TABLE NhanVien
--- ADD CONSTRAINT FK_QuanLy FOREIGN KEY (MaQL)
---    REFERENCES NhanVien(MaNV) ON DELETE SET NULL;
-
--- ALTER TABLE PhongBan
--- ADD CONSTRAINT FK_PB_QL FOREIGN KEY (MaNVQuanLy)
---     REFERENCES NhanVien(MaNV);
-
 ALTER TABLE NhanVien
 ADD CONSTRAINT FK_NhanVien_PhongBan FOREIGN KEY (MaPB) 
     REFERENCES PhongBan(MaPB);
