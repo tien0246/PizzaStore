@@ -175,6 +175,7 @@
             const button = $(
               `button[onclick="handleComplete(${orderId}, ${foodId})"]`
             );
+
             button
               .removeClass("btn-success")
               .addClass("btn-secondary")
@@ -182,10 +183,13 @@
               .text("Đã hoàn thành");
             button.closest("ul").find("li:nth-child(6)").text("Đã hoàn thành");
             // update orderDetail status
+            console.log('orderId, foodId: ' ,orderId, foodId);
+            
             let orderDetail = orderDetails.find(
               (order) => order.orderId === orderId && order.foodId === foodId
             );
             orderDetail.status = "done";
+
             // update order status
             if (
               !orderDetails.find(
@@ -209,6 +213,7 @@
               );
               // TODO: Send notification to server
             }
+
             console.log(orders, orderDetails);
 
             // Gửi request cập nhật status lên server
@@ -261,15 +266,16 @@
             for (let i = 0; i < food.length; i++) {
               const isCompleted = orderDetail[i].status === "done";
               const btnClass = isCompleted ? "btn-secondary" : "btn-success";
-              console.log("food", food[i][0], food.length);
+              console.log("food: ", food[i][0], food.length);
 
               const randomPerson =
                 food[i][0].personInCharge[
                   Math.floor(Math.random() * food[i][0].personInCharge.length)
                 ];
+                
               const button = `<button class="btn ${btnClass}" ${
                 isCompleted ? "disabled" : ""
-              } onclick="handleComplete(${order.orderId}, ${food[i].foodId})">${
+              } onclick="handleComplete(${order.orderId}, ${food[i][0].foodId})">${
                 isCompleted ? "Đã hoàn thành" : "Hoàn thành"
               }</button>`;
               $("#bepContainer .card-body").append(`
