@@ -40,14 +40,6 @@ CREATE TABLE ChiaTheo (
         REFERENCES CaLam(MaCa) ON DELETE CASCADE
 );
 
-
-CREATE TABLE NhanVienToanThoiGian (
-    MaNV INT PRIMARY KEY,
-    LuongCoBan DECIMAL(10, 2),
-    CONSTRAINT FK_NhanVien_ToanThoiGian FOREIGN KEY (MaNV)
-        REFERENCES NhanVien(MaNV) ON DELETE CASCADE
-);
-
 CREATE TABLE NhanVienToanThoiGian (
     MaNV INT PRIMARY KEY,
     LuongCoBan DECIMAL(10, 2),
@@ -655,6 +647,3 @@ BEGIN
 END;
 //
 DELIMITER ;
-
-
-
