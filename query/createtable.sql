@@ -219,19 +219,19 @@ CREATE TABLE NoiPhucVu (
     MaDH INT NOT NULL,  
     MaKhuVuc VARCHAR(10) NOT NULL, 
     MaBan INT NOT NULL,
-    PRIMARY KEY (MaDH, MaKhuVuc),  -- Khóa chính là sự kết hợp giữa MaDH và MaKhuVuc
+    PRIMARY KEY (MaDH, MaKhuVuc),  
     CONSTRAINT FK_NoiphuVu_DonHang FOREIGN KEY (MaDH)
-        REFERENCES DonHang(MaDH) ON DELETE CASCADE,  -- Ràng buộc khóa ngoại đến bảng DonHang
+        REFERENCES DonHang(MaDH) ON DELETE CASCADE,  
     CONSTRAINT FK_NoiphuVu_Ban FOREIGN KEY (MaKhuVuc, MaBan) 
-        REFERENCES Ban(MaKhuVuc, MaBan) ON DELETE CASCADE  -- Ràng buộc khóa ngoại đến bảng Ban
+        REFERENCES Ban(MaKhuVuc, MaBan) ON DELETE CASCADE 
 );
 
 CREATE TABLE MonAn (
-    MaMon INT PRIMARY KEY AUTO_INCREMENT,  -- Mã món ăn
-    TenMon VARCHAR(100) NOT NULL,          -- Tên món ăn
-    DonGiaGoc DECIMAL(10, 2) CHECK (DonGiaGoc >= 0),  -- Đơn giá gốc
-    LoaiMon VARCHAR(20) CHECK (LoaiMon IN ('Chinh', 'Trang mieng', 'Nuoc')),  -- Ràng buộc loại món ăn
-    GhiChu TEXT       ,                     -- Ghi chú thêm về món ăn (nếu cần)
+    MaMon INT PRIMARY KEY AUTO_INCREMENT, 
+    TenMon VARCHAR(100) NOT NULL,         
+    DonGiaGoc DECIMAL(10, 2) CHECK (DonGiaGoc >= 0),  
+    LoaiMon VARCHAR(20) CHECK (LoaiMon IN ('Chinh', 'Trang mieng', 'Nuoc')), 
+    GhiChu TEXT       ,                 
     TenCT VARCHAR(100),
     UNIQUE (TenCT) 
 );
@@ -335,10 +335,10 @@ DELIMITER ;
 
 
 CREATE TABLE BaoCaoDoanhThuTheoNgay (
-    Ngay DATE PRIMARY KEY,            -- Ngày báo cáo
-    TongSoMon INT DEFAULT 0,         -- Tổng số món trong ngày
-    TongDoanhThu DECIMAL(10, 2) DEFAULT 0.00,  -- Tổng doanh thu trong ngày
-    TongSoDonHang INT DEFAULT 0      -- Tổng số đơn hàng trong ngày
+    Ngay DATE PRIMARY KEY,            
+    TongSoMon INT DEFAULT 0,         
+    TongDoanhThu DECIMAL(10, 2) DEFAULT 0.00, 
+    TongSoDonHang INT DEFAULT 0  
 );
 
 -- trigger DonHang qua BaoCao
