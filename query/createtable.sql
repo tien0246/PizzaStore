@@ -188,17 +188,32 @@ CREATE TABLE DonHang (
 );
 
 CREATE TABLE KhuVuc (
-    MaKhuVuc INT PRIMARY KEY AUTO_INCREMENT,  -- Mã số khu vực, tự động tăng
-    TenKhuVuc VARCHAR(255) NOT NULL            -- Tên khu vực
+    MaKhuVuc VARCHAR(10) PRIMARY KEY, 
+    TenKhuVuc VARCHAR(255) NOT NULL 
 );
 
+-- trig để thêm tiền tố KV cho KhuVuc
+DELIMITER //
+CREATE TRIGGER before_insert_KhuVuc
+BEFORE INSERT ON KhuVuc
+FOR EACH ROW
+BEGIN
+    DECLARE new_id INT;
+
+    SELECT COALESCE(MAX(CAST(SUBSTRING(MaKhuVuc, 3) AS UNSIGNED)), 0) + 1 INTO new_id FROM KhuVuc;
+
+    SET NEW.MaKhuVuc = CONCAT('KV', LPAD(new_id, 3, '0'));
+END;
+//
+DELIMITER ;
+
 CREATE TABLE Ban (
-    MaKhuVuc INT,                             -- Mã khu vực, khóa ngoại
-    MaBan INT,                                -- Mã số bàn
-    SoGhe INT NOT NULL,                       -- Số ghế của bàn
-    PRIMARY KEY (MaKhuVuc, MaBan),           -- Khóa chính kết hợp
+    MaKhuVuc VARCHAR(10),                             
+    MaBan INT,                                
+    SoGhe INT NOT NULL,                       
+    PRIMARY KEY (MaKhuVuc, MaBan),           
     CONSTRAINT FK_Ban_KhuVuc FOREIGN KEY (MaKhuVuc) 
-        REFERENCES KhuVuc(MaKhuVuc) ON DELETE CASCADE  -- Ràng buộc khóa ngoại
+        REFERENCES KhuVuc(MaKhuVuc) ON DELETE CASCADE  
 );
 
 CREATE TABLE NoiPhucVu (
