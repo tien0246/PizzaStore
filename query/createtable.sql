@@ -224,14 +224,13 @@ CREATE TABLE MonAn (
 
 -- Tao Bang DH theo mon
 CREATE TABLE DonHangChiTietTheoMon (
-    MaCTDH INT PRIMARY KEY AUTO_INCREMENT,   -- Mã chi tiết đơn hàng
-    MaDH INT,                                
-    MaMon INT,                               
-    -- TenMon VARCHAR(255),                     
-    SoLuong INT CHECK (SoLuong > 0),        
-    Gia DECIMAL(10, 2) CHECK (Gia >= 0),    
-    GhiChu TEXT,                            
+    MaDH INT NOT NULL,                               
+    MaMon INT NOT NULL,                              
+    SoLuong INT CHECK (SoLuong > 0),                 
+    Gia DECIMAL(10, 2) CHECK (Gia >= 0),             
+    GhiChu TEXT,                                     
     ThoiGianTao DATETIME DEFAULT CURRENT_TIMESTAMP,  
+    CONSTRAINT PK_DonHangChiTiet PRIMARY KEY (MaDH, MaMon),
     CONSTRAINT FK_DHCT_DH FOREIGN KEY (MaDH)
         REFERENCES DonHang(MaDH) ON DELETE CASCADE,
     CONSTRAINT FK_DHCT_Mon FOREIGN KEY (MaMon)
@@ -436,20 +435,22 @@ DELIMITER ;
 
 
 -- Bảng ThucThi
+-- Bảng ThucThi
 CREATE TABLE ThucThi (
     MaMon INT NOT NULL,                                    
     MaDH INT NOT NULL,                                     
     MaNVBep INT,                                          
+    MaNVPhucVu INT,                                       -- Cột khóa ngoại
     ThoiGianNhan DATETIME DEFAULT CURRENT_TIMESTAMP,      
     ThoiGianHoanTat DATETIME,                            
-    Status VARCHAR(50),                                    -- Trạng thái món ăn (Hoàn Thành, Đang Chuẩn Bị, Huỷ, ...)
+    Status VARCHAR(50),                                    -- Trạng thái món ăn
     PRIMARY KEY (MaMon, MaDH, MaNVBep),                   
     CONSTRAINT FK_ThucThi_DonHangChiTiet FOREIGN KEY (MaMon, MaDH) 
-        REFERENCES DonHangChiTietTheoMon(MaMon, MaDH) ON DELETE SET NULL,  
+        REFERENCES DonHangChiTietTheoMon(MaDH, MaMon) ON DELETE RESTRICT,  
     CONSTRAINT FK_ThucThi_NhanVienBep FOREIGN KEY (MaNVBep) 
-        REFERENCES NhanVienBep(MaNV) ON DELETE SET NULL,   
+        REFERENCES NhanVienBep(MaNV) ON DELETE RESTRICT,   
     CONSTRAINT FK_ThucThi_NhanVienPhucVu FOREIGN KEY (MaNVPhucVu) 
-        REFERENCES PhucVu(MaNV) ON DELETE SET NULL          
+        REFERENCES PhucVu(MaNV) ON DELETE RESTRICT          
 );
 
 -- Hàm cho đầu bếp
