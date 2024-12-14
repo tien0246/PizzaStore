@@ -218,7 +218,7 @@ CREATE TABLE Ban (
 
 CREATE TABLE NoiPhucVu (
     MaDH INT NOT NULL,  
-    MaKhuVuc INT NOT NULL, 
+    MaKhuVuc VARCHAR(10) NOT NULL, 
     MaBan INT NOT NULL,
     PRIMARY KEY (MaDH, MaKhuVuc),  -- Khóa chính là sự kết hợp giữa MaDH và MaKhuVuc
     CONSTRAINT FK_NoiphuVu_DonHang FOREIGN KEY (MaDH)
