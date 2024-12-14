@@ -51,6 +51,14 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-4 p-2">
+                <div class="card menu-card" onclick="window.location.href='index.php?controller=report&action=view'">
+                    <div class="card-body">
+                        <h5 class="card-title">Báo cáo</h5>
+                        <p class="card-text">Thống kê đơn hàng, món ăn và doanh thu</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>

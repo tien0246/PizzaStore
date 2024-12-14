@@ -8,7 +8,6 @@ class KitchenController {
         global $pdo;
         $this->kitchenModel = new Kitchen($pdo);
     }
-
     public function view() {
         try {
             $dishes = $this->kitchenModel->getDishesToPrepare();
