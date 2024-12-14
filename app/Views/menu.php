@@ -5,6 +5,7 @@
     <title>Quản Lý Hệ Thống</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="app/Views/css/style.css">
+    <link rel="stylesheet" href="app/Views/css/menu.css">
 </head>
 <body>
     <div class="container text-center mt-5">
@@ -27,14 +28,7 @@
         <?php endif; ?>
         
         <div class="row justify-content-center">
-            <div class="col-md-4 p-2">
-                <div class="card menu-card" onclick="window.location.href='index.php?controller=customer&action=create'">
-                    <div class="card-body">
-                        <h5 class="card-title">Tạo Khách Hàng</h5>
-                        <p class="card-text">Nhập thông tin khách hàng mới vào hệ thống.</p>
-                    </div>
-                </div>
-            </div>
+            
             <div class="col-md-4 p-2">
                 <div class="card menu-card" onclick="window.location.href='index.php?controller=order&action=create'">
                     <div class="card-body">
@@ -56,6 +50,14 @@
                     <div class="card-body">
                         <h5 class="card-title">Báo cáo</h5>
                         <p class="card-text">Thống kê đơn hàng, món ăn và doanh thu</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 p-2">
+                <div class="card menu-card" onclick="window.location.href='index.php?controller=customer&action=create'">
+                    <div class="card-body">
+                        <h5 class="card-title">Tạo Khách Hàng</h5>
+                        <p class="card-text">Nhập thông tin khách hàng mới vào hệ thống.</p>
                     </div>
                 </div>
             </div>

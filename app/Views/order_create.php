@@ -5,6 +5,7 @@
     <title>Tạo Đơn Hàng</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="app/Views/css/style.css">
+    <link rel="stylesheet" href="app/Views/css/order_create.css">
     <script>
         function addMonAn() {
             const container = document.getElementById('monAnContainer');

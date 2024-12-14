@@ -5,6 +5,7 @@
     <title>Quản Lý Bếp</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="app/Views/css/style.css">
+    <link rel="stylesheet" href="app/Views/css/kitchen_view.css">
 </head>
 <body>
     <div class="container mt-5">
