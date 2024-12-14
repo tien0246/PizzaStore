@@ -1,9 +1,11 @@
-INSERT INTO DonHang VALUES (2, 2024-02-02 11:00:00, 2, 288000, 2024-02-02 11:45:00, Tiền mặt, Hoàn tất, Không có, Không đặt trước, 2024-12-14, 2, , , );
-INSERT INTO DonHang VALUES (3, 2024-02-03 9:30:00, 1, 139000, 2024-02-03 10:00:00, Chuyển khoản, Hoàn tất, Không có, Không đặt trước, 2024-12-14, 3, , , );
-INSERT INTO DonHang VALUES (4, 2024-02-04 8:15:00, 2, 356000, 2024-02-04 9:00:00, Tiền mặt, Hoàn tất, Không có, Không đặt trước, 2024-12-14, 4, , , );
-INSERT INTO DonHang VALUES (5, 2024-02-05 14:45:00, 1, 199000, 2024-02-05 15:15:00, Chuyển khoản, Hoàn tất, Không có, Không đặt trước, 2024-12-14, 5, , , );
-INSERT INTO DonHang VALUES (6, 2024-02-06 16:30:00, 2, 500000, 2024-02-06 17:00:00, Tiền mặt, Hoàn tất, Không có, Không đặt trước, 2024-12-14, 6, , , );
-INSERT INTO DonHang VALUES (7, 2024-02-07 12:00:00, 4, 356000, 2024-02-07 12:30:00, Chuyển khoản, Hoàn tất, Không có, Không đặt trước, 2024-12-14, 7, , , );
-INSERT INTO DonHang VALUES (8, 2024-02-08 9:00:00, 6, 476000, 2024-02-08 9:30:00, Tiền mặt, Hoàn tất, Không có, Không đặt trước, 2024-12-14, 8, , , );
-INSERT INTO DonHang VALUES (9, 2024-02-09 15:30:00, 3, 367000, 2024-02-09 16:00:00, Chuyển khoản, Hoàn tất, Không có, Không đặt trước, 2024-12-14, 9, , , );
-INSERT INTO DonHang VALUES (10, 2024-02-10 11:15:00, 4, 429000, 2024-02-10 11:45:00, Tiền mặt, Hoàn tất, Không có, Không đặt trước, 2024-12-14, 10, , , );
+MaDH,ThoiGianTao,SoLuongMonHoanTat,TongGiaTri,ThoiGianThanhToan,PhuongPhapThanhToan,TinhTrang,GhiChu,LoaiDH,NgayGhiNhan,MaKH,ThoiGianHenGiao,ThoiGianDatBan,LyDoHuy
+1,2024-02-01 10:00:00,2,428000,2024-02-01 10:30:00,Chuyển khoản,Hoàn tất,Không có,Không đặt trước,2024-12-14,1,,,
+2,2024-02-02 11:00:00,2,288000,2024-02-02 11:45:00,Tiền mặt,Hoàn tất,Không có,Không đặt trước,2024-12-14,2,,,
+3,2024-02-03 9:30:00,1,139000,2024-02-03 10:00:00,Chuyển khoản,Hoàn tất,Không có,Không đặt trước,2024-12-14,3,,,
+4,2024-02-04 8:15:00,2,356000,2024-02-04 9:00:00,Tiền mặt,Hoàn tất,Không có,Không đặt trước,2024-12-14,4,,,
+5,2024-02-05 14:45:00,1,199000,2024-02-05 15:15:00,Chuyển khoản,Hoàn tất,Không có,Không đặt trước,2024-12-14,5,,,
+6,2024-02-06 16:30:00,2,500000,2024-02-06 17:00:00,Tiền mặt,Hoàn tất,Không có,Không đặt trước,2024-12-14,6,,,
+7,2024-02-07 12:00:00,4,356000,2024-02-07 12:30:00,Chuyển khoản,Hoàn tất,Không có,Không đặt trước,2024-12-14,7,,,
+8,2024-02-08 9:00:00,6,476000,2024-02-08 9:30:00,Tiền mặt,Hoàn tất,Không có,Không đặt trước,2024-12-14,8,,,
+9,2024-02-09 15:30:00,3,367000,2024-02-09 16:00:00,Chuyển khoản,Hoàn tất,Không có,Không đặt trước,2024-12-14,9,,,
+10,2024-02-10 11:15:00,4,429000,2024-02-10 11:45:00,Tiền mặt,Hoàn tất,Không có,Không đặt trước,2024-12-14,10,,,
