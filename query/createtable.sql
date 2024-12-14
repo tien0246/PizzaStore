@@ -639,3 +639,626 @@ BEGIN
 END;
 //
 DELIMITER ;
+
+-- ================================================
+-- CRUD Stored Procedures for Main Tables
+-- ================================================
+
+-- NhanVien Table
+DELIMITER //
+CREATE PROCEDURE AddNhanVien(
+    IN p_HoTen VARCHAR(100),
+    IN p_NgaySinh DATE,
+    IN p_CCCD VARCHAR(12),
+    IN p_GioiTinh CHAR(1),
+    IN p_SoDienThoai VARCHAR(15),
+    IN p_SoNha VARCHAR(255),
+    IN p_Duong VARCHAR(255),
+    IN p_Xa VARCHAR(255),
+    IN p_Huyen VARCHAR(255),
+    IN p_Tinh VARCHAR(255),
+    IN p_MaPB INT
+)
+BEGIN
+    INSERT INTO NhanVien (
+        HoTen, NgaySinh, CanCuocCongDan, GioiTinh, 
+        SoDienThoai, SoNha, Duong, Xa, Huyen, Tinh, MaPB
+    ) VALUES (
+        p_HoTen, p_NgaySinh, p_CCCD, p_GioiTinh, 
+        p_SoDienThoai, p_SoNha, p_Duong, p_Xa, p_Huyen, p_Tinh, p_MaPB
+    );
+END;
+//
+CREATE PROCEDURE GetAllNhanVien()
+BEGIN
+    SELECT * FROM NhanVien;
+END;
+//
+CREATE PROCEDURE GetNhanVienById(
+    IN p_MaNV INT
+)
+BEGIN
+    SELECT * FROM NhanVien WHERE MaNV = p_MaNV;
+END;
+//
+CREATE PROCEDURE UpdateNhanVien(
+    IN p_MaNV INT,
+    IN p_HoTen VARCHAR(100),
+    IN p_NgaySinh DATE,
+    IN p_CCCD VARCHAR(12),
+    IN p_GioiTinh CHAR(1),
+    IN p_SoDienThoai VARCHAR(15),
+    IN p_SoNha VARCHAR(255),
+    IN p_Duong VARCHAR(255),
+    IN p_Xa VARCHAR(255),
+    IN p_Huyen VARCHAR(255),
+    IN p_Tinh VARCHAR(255),
+    IN p_MaPB INT
+)
+BEGIN
+    UPDATE NhanVien
+    SET 
+        HoTen = p_HoTen,
+        NgaySinh = p_NgaySinh,
+        CanCuocCongDan = p_CCCD,
+        GioiTinh = p_GioiTinh,
+        SoDienThoai = p_SoDienThoai,
+        SoNha = p_SoNha,
+        Duong = p_Duong,
+        Xa = p_Xa,
+        Huyen = p_Huyen,
+        Tinh = p_Tinh,
+        MaPB = p_MaPB
+    WHERE MaNV = p_MaNV;
+END;
+//
+CREATE PROCEDURE DeleteNhanVien(
+    IN p_MaNV INT
+)
+BEGIN
+    DELETE FROM NhanVien WHERE MaNV = p_MaNV;
+END;
+//
+
+-- PhongBan Table
+CREATE PROCEDURE AddPhongBan(
+    IN p_TenPB VARCHAR(100),
+    IN p_MaPBQuanLy INT
+)
+BEGIN
+    INSERT INTO PhongBan (TenPB, MaPBQuanLy)
+    VALUES (p_TenPB, p_MaPBQuanLy);
+END;
+//
+CREATE PROCEDURE GetAllPhongBan()
+BEGIN
+    SELECT * FROM PhongBan;
+END;
+//
+CREATE PROCEDURE GetPhongBanByMaPB(
+    IN p_MaPB INT
+)
+BEGIN
+    SELECT * FROM PhongBan WHERE MaPB = p_MaPB;
+END;
+//
+CREATE PROCEDURE UpdatePhongBan(
+    IN p_MaPB INT,
+    IN p_TenPB VARCHAR(100),
+    IN p_MaPBQuanLy INT
+)
+BEGIN
+    UPDATE PhongBan
+    SET 
+        TenPB = p_TenPB,
+        MaPBQuanLy = p_MaPBQuanLy
+    WHERE MaPB = p_MaPB;
+END;
+//
+CREATE PROCEDURE DeletePhongBan(
+    IN p_MaPB INT
+)
+BEGIN
+    DELETE FROM PhongBan WHERE MaPB = p_MaPB;
+END;
+//
+
+-- NhaCungCap Table
+CREATE PROCEDURE AddNhaCungCap(
+    IN p_TenNCC VARCHAR(100),
+    IN p_SoNha VARCHAR(50),
+    IN p_TenDuong VARCHAR(100),
+    IN p_PhuongXa VARCHAR(100),
+    IN p_QuanHuyen VARCHAR(100),
+    IN p_TinhThanh VARCHAR(100)
+)
+BEGIN
+    INSERT INTO NhaCungCap (TenNCC, SoNha, TenDuong, PhuongXa, QuanHuyen, TinhThanh)
+    VALUES (p_TenNCC, p_SoNha, p_TenDuong, p_PhuongXa, p_QuanHuyen, p_TinhThanh);
+END;
+//
+CREATE PROCEDURE GetAllNhaCungCap()
+BEGIN
+    SELECT * FROM NhaCungCap;
+END;
+//
+CREATE PROCEDURE GetNhaCungCapByTenNCC(
+    IN p_TenNCC VARCHAR(100)
+)
+BEGIN
+    SELECT * FROM NhaCungCap WHERE TenNCC = p_TenNCC;
+END;
+//
+CREATE PROCEDURE UpdateNhaCungCap(
+    IN p_TenNCC VARCHAR(100),
+    IN p_SoNha VARCHAR(50),
+    IN p_TenDuong VARCHAR(100),
+    IN p_PhuongXa VARCHAR(100),
+    IN p_QuanHuyen VARCHAR(100),
+    IN p_TinhThanh VARCHAR(100)
+)
+BEGIN
+    UPDATE NhaCungCap
+    SET 
+        SoNha = p_SoNha,
+        TenDuong = p_TenDuong,
+        PhuongXa = p_PhuongXa,
+        QuanHuyen = p_QuanHuyen,
+        TinhThanh = p_TinhThanh
+    WHERE TenNCC = p_TenNCC;
+END;
+//
+CREATE PROCEDURE DeleteNhaCungCap(
+    IN p_TenNCC VARCHAR(100)
+)
+BEGIN
+    DELETE FROM NhaCungCap WHERE TenNCC = p_TenNCC;
+END;
+//
+
+-- NguyenLieu Table
+CREATE PROCEDURE AddNguyenLieu(
+    IN p_TenNguyenLieu VARCHAR(100),
+    IN p_DonViTinh VARCHAR(50),
+    IN p_LoSanXuat VARCHAR(50),
+    IN p_SoLuongTrongKho INT
+)
+BEGIN
+    INSERT INTO NguyenLieu (TenNguyenLieu, DonViTinh, LoSanXuat, SoLuongTrongKho)
+    VALUES (p_TenNguyenLieu, p_DonViTinh, p_LoSanXuat, p_SoLuongTrongKho);
+END;
+//
+CREATE PROCEDURE GetAllNguyenLieu()
+BEGIN
+    SELECT * FROM NguyenLieu;
+END;
+//
+CREATE PROCEDURE GetNguyenLieuByMaNL(
+    IN p_MaNL INT
+)
+BEGIN
+    SELECT * FROM NguyenLieu WHERE MaNL = p_MaNL;
+END;
+//
+CREATE PROCEDURE UpdateNguyenLieu(
+    IN p_MaNL INT,
+    IN p_TenNguyenLieu VARCHAR(100),
+    IN p_DonViTinh VARCHAR(50),
+    IN p_LoSanXuat VARCHAR(50),
+    IN p_SoLuongTrongKho INT
+)
+BEGIN
+    UPDATE NguyenLieu
+    SET 
+        TenNguyenLieu = p_TenNguyenLieu,
+        DonViTinh = p_DonViTinh,
+        LoSanXuat = p_LoSanXuat,
+        SoLuongTrongKho = p_SoLuongTrongKho
+    WHERE MaNL = p_MaNL;
+END;
+//
+CREATE PROCEDURE DeleteNguyenLieu(
+    IN p_MaNL INT
+)
+BEGIN
+    DELETE FROM NguyenLieu WHERE MaNL = p_MaNL;
+END;
+//
+
+-- KhuVuc Table
+CREATE PROCEDURE AddKhuVuc(
+    IN p_TenKhuVuc VARCHAR(255)
+)
+BEGIN
+    INSERT INTO KhuVuc (TenKhuVuc)
+    VALUES (p_TenKhuVuc);
+END;
+//
+CREATE PROCEDURE GetAllKhuVuc()
+BEGIN
+    SELECT * FROM KhuVuc;
+END;
+//
+CREATE PROCEDURE GetKhuVucByMaKhuVuc(
+    IN p_MaKhuVuc VARCHAR(10)
+)
+BEGIN
+    SELECT * FROM KhuVuc WHERE MaKhuVuc = p_MaKhuVuc;
+END;
+//
+CREATE PROCEDURE UpdateKhuVuc(
+    IN p_MaKhuVuc VARCHAR(10),
+    IN p_TenKhuVuc VARCHAR(255)
+)
+BEGIN
+    UPDATE KhuVuc
+    SET TenKhuVuc = p_TenKhuVuc
+    WHERE MaKhuVuc = p_MaKhuVuc;
+END;
+//
+CREATE PROCEDURE DeleteKhuVuc(
+    IN p_MaKhuVuc VARCHAR(10)
+)
+BEGIN
+    DELETE FROM KhuVuc WHERE MaKhuVuc = p_MaKhuVuc;
+END;
+//
+
+-- Ban Table
+CREATE PROCEDURE AddBan(
+    IN p_MaKhuVuc VARCHAR(10),
+    IN p_MaBan INT,
+    IN p_SoGhe INT
+)
+BEGIN
+    INSERT INTO Ban (MaKhuVuc, MaBan, SoGhe)
+    VALUES (p_MaKhuVuc, p_MaBan, p_SoGhe);
+END;
+//
+CREATE PROCEDURE GetAllBan()
+BEGIN
+    SELECT * FROM Ban;
+END;
+//
+CREATE PROCEDURE GetBanByMaKhuVucMaBan(
+    IN p_MaKhuVuc VARCHAR(10),
+    IN p_MaBan INT
+)
+BEGIN
+    SELECT * FROM Ban 
+    WHERE MaKhuVuc = p_MaKhuVuc AND MaBan = p_MaBan;
+END;
+//
+CREATE PROCEDURE UpdateBan(
+    IN p_MaKhuVuc VARCHAR(10),
+    IN p_MaBan INT,
+    IN p_SoGhe INT
+)
+BEGIN
+    UPDATE Ban
+    SET SoGhe = p_SoGhe
+    WHERE MaKhuVuc = p_MaKhuVuc AND MaBan = p_MaBan;
+END;
+//
+CREATE PROCEDURE DeleteBan(
+    IN p_MaKhuVuc VARCHAR(10),
+    IN p_MaBan INT
+)
+BEGIN
+    DELETE FROM Ban 
+    WHERE MaKhuVuc = p_MaKhuVuc AND MaBan = p_MaBan;
+END;
+//
+
+-- KhachHang Table
+CREATE PROCEDURE AddKhachHang(
+    IN p_HoTen VARCHAR(100),
+    IN p_GioiTinh CHAR(1),
+    IN p_SoDienThoai VARCHAR(15),
+    IN p_SoNha VARCHAR(50),
+    IN p_TenDuong VARCHAR(100),
+    IN p_PhuongXa VARCHAR(100),
+    IN p_QuanHuyen VARCHAR(100),
+    IN p_TinhThanh VARCHAR(100),
+    IN p_LoaiKH VARCHAR(20),
+    IN p_NgaySinh DATE,
+    IN p_CCCD VARCHAR(12)
+)
+BEGIN
+    INSERT INTO KhachHang (
+        HoTen, GioiTinh, SoDienThoai, SoNha, 
+        TenDuong, PhuongXa, QuanHuyen, TinhThanh, 
+        LoaiKH, NgaySinh, CCCD
+    ) VALUES (
+        p_HoTen, p_GioiTinh, p_SoDienThoai, p_SoNha, 
+        p_TenDuong, p_PhuongXa, p_QuanHuyen, p_TinhThanh, 
+        p_LoaiKH, p_NgaySinh, p_CCCD
+    );
+END;
+//
+CREATE PROCEDURE GetAllKhachHang()
+BEGIN
+    SELECT * FROM KhachHang;
+END;
+//
+CREATE PROCEDURE GetKhachHangByMaKH(
+    IN p_MaKH INT
+)
+BEGIN
+    SELECT * FROM KhachHang WHERE MaKH = p_MaKH;
+END;
+//
+CREATE PROCEDURE UpdateKhachHang(
+    IN p_MaKH INT,
+    IN p_HoTen VARCHAR(100),
+    IN p_GioiTinh CHAR(1),
+    IN p_SoDienThoai VARCHAR(15),
+    IN p_SoNha VARCHAR(50),
+    IN p_TenDuong VARCHAR(100),
+    IN p_PhuongXa VARCHAR(100),
+    IN p_QuanHuyen VARCHAR(100),
+    IN p_TinhThanh VARCHAR(100),
+    IN p_LoaiKH VARCHAR(20),
+    IN p_NgaySinh DATE,
+    IN p_CCCD VARCHAR(12)
+)
+BEGIN
+    UPDATE KhachHang
+    SET 
+        HoTen = p_HoTen,
+        GioiTinh = p_GioiTinh,
+        SoDienThoai = p_SoDienThoai,
+        SoNha = p_SoNha,
+        TenDuong = p_TenDuong,
+        PhuongXa = p_PhuongXa,
+        QuanHuyen = p_QuanHuyen,
+        TinhThanh = p_TinhThanh,
+        LoaiKH = p_LoaiKH,
+        NgaySinh = p_NgaySinh,
+        CCCD = p_CCCD
+    WHERE MaKH = p_MaKH;
+END;
+//
+CREATE PROCEDURE DeleteKhachHang(
+    IN p_MaKH INT
+)
+BEGIN
+    DELETE FROM KhachHang WHERE MaKH = p_MaKH;
+END;
+//
+
+-- DonHang Table
+CREATE PROCEDURE AddDonHang(
+    IN p_ThoiGianTao DATETIME,
+    IN p_SoLuongMonHoanTat INT,
+    IN p_TongGiaTri DECIMAL(10, 2),
+    IN p_ThoiGianThanhToan DATETIME,
+    IN p_PhuongPhapThanhToan VARCHAR(50),
+    IN p_TinhTrang VARCHAR(50),
+    IN p_GhiChu TEXT,
+    IN p_LoaiDH VARCHAR(20),
+    IN p_NgayGhiNhan DATE,
+    IN p_MaKH INT,
+    IN p_ThoiGianHenGiao DATETIME,
+    IN p_ThoiGianDatBan DATETIME,
+    IN p_LyDoHuy TEXT
+)
+BEGIN
+    INSERT INTO DonHang (
+        ThoiGianTao, SoLuongMonHoanTat, TongGiaTri, ThoiGianThanhToan,
+        PhuongPhapThanhToan, TinhTrang, GhiChu, LoaiDH,
+        NgayGhiNhan, MaKH, ThoiGianHenGiao, ThoiGianDatBan, LyDoHuy
+    ) VALUES (
+        p_ThoiGianTao, p_SoLuongMonHoanTat, p_TongGiaTri, p_ThoiGianThanhToan,
+        p_PhuongPhapThanhToan, p_TinhTrang, p_GhiChu, p_LoaiDH,
+        p_NgayGhiNhan, p_MaKH, p_ThoiGianHenGiao, p_ThoiGianDatBan, p_LyDoHuy
+    );
+END;
+//
+CREATE PROCEDURE GetAllDonHang()
+BEGIN
+    SELECT * FROM DonHang;
+END;
+//
+CREATE PROCEDURE GetDonHangByMaDH(
+    IN p_MaDH INT
+)
+BEGIN
+    SELECT * FROM DonHang WHERE MaDH = p_MaDH;
+END;
+//
+CREATE PROCEDURE UpdateDonHang(
+    IN p_MaDH INT,
+    IN p_ThoiGianTao DATETIME,
+    IN p_SoLuongMonHoanTat INT,
+    IN p_TongGiaTri DECIMAL(10, 2),
+    IN p_ThoiGianThanhToan DATETIME,
+    IN p_PhuongPhapThanhToan VARCHAR(50),
+    IN p_TinhTrang VARCHAR(50),
+    IN p_GhiChu TEXT,
+    IN p_LoaiDH VARCHAR(20),
+    IN p_NgayGhiNhan DATE,
+    IN p_MaKH INT,
+    IN p_ThoiGianHenGiao DATETIME,
+    IN p_ThoiGianDatBan DATETIME,
+    IN p_LyDoHuy TEXT
+)
+BEGIN
+    UPDATE DonHang
+    SET 
+        ThoiGianTao = p_ThoiGianTao,
+        SoLuongMonHoanTat = p_SoLuongMonHoanTat,
+        TongGiaTri = p_TongGiaTri,
+        ThoiGianThanhToan = p_ThoiGianThanhToan,
+        PhuongPhapThanhToan = p_PhuongPhapThanhToan,
+        TinhTrang = p_TinhTrang,
+        GhiChu = p_GhiChu,
+        LoaiDH = p_LoaiDH,
+        NgayGhiNhan = p_NgayGhiNhan,
+        MaKH = p_MaKH,
+        ThoiGianHenGiao = p_ThoiGianHenGiao,
+        ThoiGianDatBan = p_ThoiGianDatBan,
+        LyDoHuy = p_LyDoHuy
+    WHERE MaDH = p_MaDH;
+END;
+//
+CREATE PROCEDURE DeleteDonHang(
+    IN p_MaDH INT
+)
+BEGIN
+    DELETE FROM DonHang WHERE MaDH = p_MaDH;
+END;
+//
+
+-- MonAn Table
+CREATE PROCEDURE AddMonAn(
+    IN p_TenMon VARCHAR(100),
+    IN p_DonGiaGoc DECIMAL(10, 2),
+    IN p_LoaiMon VARCHAR(20),
+    IN p_GhiChu TEXT,
+    IN p_TenCT VARCHAR(100)
+)
+BEGIN
+    INSERT INTO MonAn (TenMon, DonGiaGoc, LoaiMon, GhiChu, TenCT)
+    VALUES (p_TenMon, p_DonGiaGoc, p_LoaiMon, p_GhiChu, p_TenCT);
+END;
+//
+CREATE PROCEDURE GetAllMonAn()
+BEGIN
+    SELECT * FROM MonAn;
+END;
+//
+CREATE PROCEDURE GetMonAnByMaMon(
+    IN p_MaMon INT
+)
+BEGIN
+    SELECT * FROM MonAn WHERE MaMon = p_MaMon;
+END;
+//
+CREATE PROCEDURE UpdateMonAn(
+    IN p_MaMon INT,
+    IN p_TenMon VARCHAR(100),
+    IN p_DonGiaGoc DECIMAL(10, 2),
+    IN p_LoaiMon VARCHAR(20),
+    IN p_GhiChu TEXT,
+    IN p_TenCT VARCHAR(100)
+)
+BEGIN
+    UPDATE MonAn
+    SET 
+        TenMon = p_TenMon,
+        DonGiaGoc = p_DonGiaGoc,
+        LoaiMon = p_LoaiMon,
+        GhiChu = p_GhiChu,
+        TenCT = p_TenCT
+    WHERE MaMon = p_MaMon;
+END;
+//
+CREATE PROCEDURE DeleteMonAn(
+    IN p_MaMon INT
+)
+BEGIN
+    DELETE FROM MonAn WHERE MaMon = p_MaMon;
+END;
+//
+
+-- BaoCaoDoanhThuTheoNgay Table
+CREATE PROCEDURE AddBaoCaoDoanhThuTheoNgay(
+    IN p_Ngay DATE,
+    IN p_TongSoMon INT,
+    IN p_TongDoanhThu DECIMAL(10, 2),
+    IN p_TongSoDonHang INT
+)
+BEGIN
+    INSERT INTO BaoCaoDoanhThuTheoNgay (Ngay, TongSoMon, TongDoanhThu, TongSoDonHang)
+    VALUES (p_Ngay, p_TongSoMon, p_TongDoanhThu, p_TongSoDonHang);
+END;
+//
+CREATE PROCEDURE GetAllBaoCaoDoanhThuTheoNgay()
+BEGIN
+    SELECT * FROM BaoCaoDoanhThuTheoNgay;
+END;
+//
+CREATE PROCEDURE GetBaoCaoDoanhThuTheoNgayByNgay(
+    IN p_Ngay DATE
+)
+BEGIN
+    SELECT * FROM BaoCaoDoanhThuTheoNgay WHERE Ngay = p_Ngay;
+END;
+//
+CREATE PROCEDURE UpdateBaoCaoDoanhThuTheoNgay(
+    IN p_Ngay DATE,
+    IN p_TongSoMon INT,
+    IN p_TongDoanhThu DECIMAL(10, 2),
+    IN p_TongSoDonHang INT
+)
+BEGIN
+    UPDATE BaoCaoDoanhThuTheoNgay
+    SET 
+        TongSoMon = p_TongSoMon,
+        TongDoanhThu = p_TongDoanhThu,
+        TongSoDonHang = p_TongSoDonHang
+    WHERE Ngay = p_Ngay;
+END;
+//
+CREATE PROCEDURE DeleteBaoCaoDoanhThuTheoNgay(
+    IN p_Ngay DATE
+)
+BEGIN
+    DELETE FROM BaoCaoDoanhThuTheoNgay WHERE Ngay = p_Ngay;
+END;
+//
+
+-- BaoCaoSoLuongMonTheoNgay Table
+CREATE PROCEDURE AddBaoCaoSoLuongMonTheoNgay(
+    IN p_Ngay DATE,
+    IN p_MaMon INT,
+    IN p_TenMon VARCHAR(255),
+    IN p_TongSoLuong INT,
+    IN p_TongDoanhThu DECIMAL(10, 2)
+)
+BEGIN
+    INSERT INTO BaoCaoSoLuongMonTheoNgay (
+        Ngay, MaMon, TenMon, TongSoLuong, TongDoanhThu
+    ) VALUES (
+        p_Ngay, p_MaMon, p_TenMon, p_TongSoLuong, p_TongDoanhThu
+    );
+END;
+//
+CREATE PROCEDURE GetAllBaoCaoSoLuongMonTheoNgay()
+BEGIN
+    SELECT * FROM BaoCaoSoLuongMonTheoNgay;
+END;
+//
+CREATE PROCEDURE GetBaoCaoSoLuongMonTheoNgayByNgayMaMon(
+    IN p_Ngay DATE,
+    IN p_MaMon INT
+)
+BEGIN
+    SELECT * FROM BaoCaoSoLuongMonTheoNgay 
+    WHERE Ngay = p_Ngay AND MaMon = p_MaMon;
+END;
+//
+CREATE PROCEDURE UpdateBaoCaoSoLuongMonTheoNgay(
+    IN p_Ngay DATE,
+    IN p_MaMon INT,
+    IN p_TongSoLuong INT,
+    IN p_TongDoanhThu DECIMAL(10, 2)
+)
+BEGIN
+    UPDATE BaoCaoSoLuongMonTheoNgay
+    SET 
+        TongSoLuong = p_TongSoLuong,
+        TongDoanhThu = p_TongDoanhThu
+    WHERE Ngay = p_Ngay AND MaMon = p_MaMon;
+END;
+//
+CREATE PROCEDURE DeleteBaoCaoSoLuongMonTheoNgay(
+    IN p_Ngay DATE,
+    IN p_MaMon INT
+)
+BEGIN
+    DELETE FROM BaoCaoSoLuongMonTheoNgay 
+    WHERE Ngay = p_Ngay AND MaMon = p_MaMon;
+END;
+//
