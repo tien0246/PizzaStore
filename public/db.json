@@ -11,7 +11,7 @@
             "orderId": 2,
             "customerId": 2,
             "status": "waiting",
-            "timeReceived": "10:05:06 10/06/2024",
+            "timeReceived": "10:05:06 11/04/2024",
             "timeCompleted": null
         },
         {
@@ -20,6 +20,41 @@
             "status": "waiting",
             "timeReceived": "10:10:10 10/06/2024",
             "timeCompleted": null
+        },
+        {
+            "orderId": 4,
+            "customerId": 3,
+            "status": "done",
+            "timeReceived": "10:10:10 10/06/2024",
+            "timeCompleted": "10:10:10 11/06/2024"
+        },
+        {
+            "orderId": 5,
+            "customerId": 3,
+            "status": "done",
+            "timeReceived": "10:10:10 10/06/2024",
+            "timeCompleted": "10:10:10 10/06/2024"
+        },
+        {
+            "orderId": 6,
+            "customerId": 3,
+            "status": "done",
+            "timeReceived": "10:10:10 10/06/2024",
+            "timeCompleted": "10:10:10 13/06/2024"
+        },
+        {
+            "orderId": 7,
+            "customerId": 3,
+            "status": "done",
+            "timeReceived": "10:10:10 10/06/2024",
+            "timeCompleted": "10:10:10 11/04/2025"
+        },
+        {
+            "orderId": 8,
+            "customerId": 3,
+            "status": "done",
+            "timeReceived": "10:10:10 10/06/2024",
+            "timeCompleted": "10:10:10 10/06/2024"
         }
     ],
     "customers": [
@@ -30,6 +65,10 @@
         {
             "customerId": 2,
             "name": "Nguyễn Thị Uyên"
+        },
+        {
+            "customerId": 3,
+            "name": "Uyên Nhi"
         }
     ],
     "foods": [
@@ -38,7 +77,8 @@
             "name": "Rượu 3000 năm",
             "personInCharge": [
                 "Nguyễn Văn A"
-            ]
+            ],
+            "price": 20000
         },
         {
             "foodId": 2,
@@ -46,7 +86,8 @@
             "personInCharge": [
                 "Nguyễn Văn B",
                 "Nguyễn Văn C"
-            ]
+            ],
+            "price": 30000
         },
         {
             "foodId": 3,
@@ -55,7 +96,18 @@
                 "Nguyễn Văn D",
                 "Nguyễn Văn E",
                 "Nguyễn Văn F"
-            ]
+            ],
+            "price": 50000
+        },
+        {
+            "foodId": 4,
+            "name": "Pizza cá hồi",
+            "personInCharge": [
+                "Nguyễn Văn A",
+                "Nguyễn Văn C",
+                "Nguyễn Văn F"
+            ],
+            "price": 45000
         }
     ],
     "orderDetails": [
@@ -100,6 +152,43 @@
             "foodId": 3,
             "quantity": 4,
             "status": "waiting"
+        },
+        {
+            "orderId": 4,
+            "foodId": 4,
+            "quantity": 4,
+            "status": "done"
+        },
+        {
+            "orderId": 5,
+            "foodId": 4,
+            "quantity": 1,
+            "status": "done"
+        },
+        {
+            "orderId": 6,
+            "foodId": 1,
+            "quantity": 2,
+            "status": "done"
+        },
+        {
+            "orderId": 7,
+            "foodId": 3,
+            "quantity": 1,
+            "status": "done"
+        },
+        {
+            "orderId": 7,
+            "foodId": 4,
+            "quantity": 6,
+            "status": "done"
+        },
+        {
+            "orderId": 8,
+            "foodId": 2,
+            "quantity": 2,
+            "status": "done"
         }
     ]
+
 }

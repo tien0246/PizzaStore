@@ -1,9 +1,9 @@
 body {
-    background-color: #fff8e1; /* Light yellow background */
+    background-color: #fff8e1; 
 }
 
 h1, h2, h3, h4, h5, h6 {
-    color: #fdd835; /* Dark yellow for headings */
+    color: #fdd835; 
 }
 
 .btn-primary {
