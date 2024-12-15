@@ -34,7 +34,10 @@ switch ($controller) {
         $kitchenController = new KitchenController();
         if ($action === 'view') {
             $kitchenController->view();
-        } else {
+        } else if ($action === 'updateStatus') {
+            $kitchenController->updateStatus();
+        }
+        else {
             $kitchenController->view();
         }
         break;
