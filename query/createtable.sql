@@ -131,7 +131,7 @@ CREATE TABLE NCC_email (
 
 CREATE TABLE CungCap (
     MaNL INT,
-    TenNCC VARCHAR(100),
+    TenNCC VARCHAR(100) NOT NULL,
     MaNVKiemKho INT,
     SoLuongGiao INT CHECK (SoLuongGiao >= 0),
     SoLuongNhapKho INT CHECK (SoLuongNhapKho >= 0),
