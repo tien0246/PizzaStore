@@ -1,23 +1,9 @@
 <?php
-function loadEnv($file) {
-    if (!file_exists($file)) {
-        die("File .env không tồn tại!");
-    }
-    $lines = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-    foreach ($lines as $line) {
-        if (strpos(trim($line), '#') === 0) {
-            continue;
-        }
-        list($key, $value) = explode('=', $line, 2);
-        $_ENV[trim($key)] = trim($value);
-    }
-}
-loadEnv(__DIR__ . '/.env');
-$host = $_ENV['DB_HOST'];
-$port = $_ENV['DB_PORT'];
-$dbname = $_ENV['DB_NAME'];
-$username = $_ENV['DB_USER'];
-$password = $_ENV['DB_PASSWORD'];
+$host = getenv('DB_HOST') ?: $_ENV['DB_HOST'];
+$port = getenv('DB_PORT') ?: $_ENV['DB_PORT'];
+$dbname = getenv('DB_NAME') ?: $_ENV['DB_NAME'];
+$username = getenv('DB_USER') ?: $_ENV['DB_USER'];
+$password = getenv('DB_PASSWORD') ?: $_ENV['DB_PASSWORD'];
 
 try {
     $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4", $username, $password);
