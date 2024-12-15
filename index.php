@@ -9,7 +9,7 @@ require_once 'app/Controllers/EmployeeController.php';
 
 $controller = isset($_GET['controller']) ? $_GET['controller'] : 'menu';
 $action = isset($_GET['action']) ? $_GET['action'] : 'index';
-
+$id = isset($_GET['id']) ? $_GET['id'] :'1';
 switch ($controller) {
     case 'customer':
         $customerController = new CustomerController();
@@ -56,7 +56,12 @@ switch ($controller) {
         $reportController = new EmployeeController();
         if ($action === 'list') {
             $reportController->list();
-        } else {
+        } elseif ($action === 'create') {
+            $reportController->create();
+        } elseif ($action === 'edit') {
+            $reportController->update($id);
+        }
+        else {
             $reportController->list();
         }
         break;

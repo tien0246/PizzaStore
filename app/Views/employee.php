@@ -78,6 +78,20 @@
   }
 
   /* Buttons */
+  .btn-primary {
+    background-color: #3498db;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #ffffff;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-primary:hover {
+    background-color: #2980b9;
+  }
+
   .btn-secondary {
     background-color: #95a5a6;
     border: none;
@@ -90,6 +104,21 @@
 
   .btn-secondary:hover {
     background-color: #7f8c8d;
+  }
+
+  .btn-add {
+    margin-bottom: 20px;
+    background-color: #2ecc71;
+    color: white;
+    border: none;
+    font-size: 16px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-add:hover {
+    background-color: #27ae60;
   }
 
   /* Responsive Design */
@@ -105,7 +134,9 @@
       padding: 8px;
     }
 
-    .btn-secondary {
+    .btn-secondary,
+    .btn-primary,
+    .btn-add {
       font-size: 14px;
       padding: 8px 16px;
     }
@@ -115,7 +146,11 @@
 <body>
     <div class="container mt-5">
         <h2 class="mb-4">Danh Sách Nhân Viên</h2>
+
+        <!-- Add Employee Button -->
+        <!-- <a href="index.php?controller=employee&action=create" class="btn btn-add">Thêm Nhân Viên</a> -->
         
+        <!-- Success and Error Alerts -->
         <?php if (isset($_SESSION['success'])): ?>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <?= htmlspecialchars($_SESSION['success']) ?>
@@ -132,6 +167,7 @@
             <?php unset($_SESSION['error']); ?>
         <?php endif; ?>
         
+        <!-- Employee Table -->
         <?php if (empty($employees)): ?>
             <div class="alert alert-info" role="alert">
                 Không có nhân viên nào trong hệ thống.
@@ -148,24 +184,29 @@
                         <th>Số Điện Thoại</th>
                         <th>Địa Chỉ</th>
                         <th>Phòng Ban</th>
+                        <!-- <th>Hành Động</th> -->
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($employees as $employee): ?>
-                        <tr>
-                            <td><?= htmlspecialchars($employee['MaNV']) ?></td>
-                            <td><?= htmlspecialchars($employee['HoTen']) ?></td>
-                            <td><?= htmlspecialchars($employee['NgaySinh']) ?></td>
-                            <td><?= htmlspecialchars($employee['CanCuocCongDan']) ?></td>
-                            <td><?= ($employee['GioiTinh'] === 'M') ? 'Nam' : 'Nữ' ?></td>
-                            <td><?= htmlspecialchars($employee['SoDienThoai']) ?></td>
-                            <td>
-                                <?= htmlspecialchars($employee['SoNha']) . ', ' . htmlspecialchars($employee['Duong']) . ', ' . htmlspecialchars($employee['Xa']) . ', ' . htmlspecialchars($employee['Huyen']) . ', ' . htmlspecialchars($employee['Tinh']) ?>
-                            </td>
-                            <td><?= htmlspecialchars($employee['MaPB']) ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
+    <?php foreach ($employees as $employee): ?>
+        <tr>
+            <td><?= htmlspecialchars($employee['MaNV']) ?></td>
+            <td><?= htmlspecialchars($employee['HoTen']) ?></td>
+            <td><?= htmlspecialchars($employee['NgaySinh']) ?></td>
+            <td><?= htmlspecialchars($employee['CanCuocCongDan']) ?></td>
+            <td><?= ($employee['GioiTinh'] === 'M') ? 'Nam' : 'Nữ' ?></td>
+            <td><?= htmlspecialchars($employee['SoDienThoai']) ?></td>
+            <td>
+                <?= htmlspecialchars($employee['SoNha']) . ', ' . htmlspecialchars($employee['Duong']) . ', ' . htmlspecialchars($employee['Xa']) . ', ' . htmlspecialchars($employee['Huyen']) . ', ' . htmlspecialchars($employee['Tinh']) ?>
+            </td>
+            <td><?= htmlspecialchars($employee['MaPB']) ?></td>
+            <!-- <td>
+                <a href="index.php?controller=employee&action=edit&id=<?= htmlspecialchars($employee['MaNV']) ?>" class="btn btn-primary btn-sm">Sửa</a>
+            </td> -->
+        </tr>
+    <?php endforeach; ?>
+</tbody>
+
             </table>
         <?php endif; ?>
         

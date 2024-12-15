@@ -1,3 +1,12 @@
+
+
+
+
+
+
+
+
+
 <?php
 require_once 'app/Models/Employee.php';
 
@@ -30,13 +39,13 @@ class EmployeeController {
                 $tinh = $_POST['tinh'];
                 $maPB = $_POST['maPB'];
                 
-                //$this->employeeModel->addEmployee($hoTen, $ngaySinh, $cccd, $gioiTinh, $soDienThoai, $soNha, $duong, $xa, $huyen, $tinh, $maPB);
+                $this->employeeModel->addEmployee($hoTen, $ngaySinh, $cccd, $gioiTinh, $soDienThoai, $soNha, $duong, $xa, $huyen, $tinh, $maPB);
                 
                 $_SESSION['success'] = "Nhân viên được tạo thành công!";
             } catch (PDOException $e) {
                 $_SESSION['error'] = "Lỗi: " . $e->getMessage();
             }
-            header("Location: index.php?controller=employee&action=create");
+            header("Location: index.php?controller=employee&action=list");
             exit();
         }
     }
@@ -49,6 +58,39 @@ class EmployeeController {
         } catch (PDOException $e) {
             $_SESSION['error'] = "Lỗi: " . $e->getMessage();
             header("Location: index.php?controller=menu");
+            exit();
+        }
+    }
+
+    // Show the form to edit an employee
+    public function edit($id) {
+        $employee = $this->employeeModel->getEmployeeDetail($id);
+        require 'app/Views/employee_edit.php';
+    }
+
+    // Handle updating an employee in the database
+    public function update($id) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $hoTen = $_POST['hoTen'];
+                $ngaySinh = $_POST['ngaySinh'];
+                $cccd = $_POST['cccd'];
+                $gioiTinh = $_POST['gioiTinh'];
+                $soDienThoai = $_POST['soDienThoai'];
+                $soNha = $_POST['soNha'];
+                $duong = $_POST['duong'];
+                $xa = $_POST['xa'];
+                $huyen = $_POST['huyen'];
+                $tinh = $_POST['tinh'];
+                $maPB = $_POST['maPB'];
+                
+                $this->employeeModel->updateNhanVien($id, $hoTen, $ngaySinh, $cccd, $gioiTinh, $soDienThoai, $soNha, $duong, $xa, $huyen, $tinh, $maPB);
+                
+                $_SESSION['success'] = "Nhân viên đã được cập nhật!";
+            } catch (PDOException $e) {
+                $_SESSION['error'] = "Lỗi: " . $e->getMessage();
+            }
+            header("Location: index.php?controller=employee&action=list");
             exit();
         }
     }
