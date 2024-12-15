@@ -552,6 +552,17 @@ INSERT INTO NguyenLieu VALUES (28, 'Sốt BBQ', 'lít', '2024-02-08', 45);
 INSERT INTO NguyenLieu VALUES (29, 'Sốt tiêu đen', 'lít', '2024-02-09', 35);
 INSERT INTO NguyenLieu VALUES (30, 'Sốt nấm', 'lít', '2024-02-10', 25);
 
+INSERT INTO CongThuc VALUES ('Pizza Hải Sản', 'Pizza được chế biến từ bột mì, sốt cà chua, phô mai, và các loại hải sản tươi ngon như tôm, mực, cá hồi.');
+INSERT INTO CongThuc VALUES ('Pizza Trứng Muối', 'Pizza đặc biệt với lớp trứng muối béo ngậy, phô mai, và thêm các loại rau củ.');
+INSERT INTO CongThuc VALUES ('Mì Ý Bolognese', 'Mì Ý với sốt Bolognese làm từ thịt bò xay, cà chua và các gia vị truyền thống.');
+INSERT INTO CongThuc VALUES ('Bánh Phồng Tôm', 'Bánh làm từ bột tôm, chiên giòn, ăn kèm với sốt chua ngọt.');
+INSERT INTO CongThuc VALUES ('Salad Trái Cây', 'Salad tươi ngon với nhiều loại trái cây như dưa hấu, xoài, kiwi, và nước sốt mật ong.');
+INSERT INTO CongThuc VALUES ('Nước Chanh Muối', 'Nước giải khát chua mặn, được làm từ nước chanh tươi, muối và đường.');
+INSERT INTO CongThuc VALUES ('Nước Dừa Tươi', 'Nước dừa tự nhiên, mang lại cảm giác tươi mát và bổ dưỡng.');
+INSERT INTO CongThuc VALUES ('Pizza Margherita', 'Pizza truyền thống của Ý với lớp sốt cà chua, phô mai mozzarella và lá basil tươi.');
+INSERT INTO CongThuc VALUES ('Mì Ý Carbonara', 'Mì Ý với sốt carbonara béo ngậy từ lòng đỏ trứng, phô mai và thịt xông khói.');
+INSERT INTO CongThuc VALUES ('Soda Chanh', 'Nước soda chanh giải khát, kết hợp giữa soda và nước chanh tươi, rất thích hợp cho mùa hè.');
+
 INSERT INTO CongThucGomCo VALUES (1, 'Pizza Hải Sản', 0.2);
 INSERT INTO CongThucGomCo VALUES (3, 'Pizza Hải Sản', 0.02);
 INSERT INTO CongThucGomCo VALUES (4, 'Pizza Hải Sản', 0.005);
