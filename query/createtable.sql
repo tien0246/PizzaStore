@@ -1261,3 +1261,19 @@ BEGIN
     WHERE Ngay = p_Ngay AND MaMon = p_MaMon;
 END;
 //
+CREATE PROCEDURE "GetMonChuaHoanThanh"()
+BEGIN
+    SELECT * FROM ThucThi
+    WHERE Status = 'Chưa hoàn thành';
+END
+//
+CREATE PROCEDURE "UpdateStatusThucThi"(
+    IN p_MaDH INT,
+    IN p_MaMon INT
+)
+BEGIN
+    UPDATE ThucThi
+    SET 
+        Status = 'Hoàn thành'
+    WHERE MaDH = p_MaDH AND MaMon = p_MaMon;
+END

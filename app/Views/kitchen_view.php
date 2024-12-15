@@ -55,7 +55,17 @@
                             <td><?= htmlspecialchars($dish['MaNVPhucVu']) ?></td>
                             <td><?= htmlspecialchars($dish['ThoiGianNhan']) ?></td>
                             <td><?= htmlspecialchars($dish['ThoiGianHoanTat']) ?></td>
-                            <td><?= htmlspecialchars($dish['Status']) ?></td>
+                            <td>
+                                <?php if ($dish['Status'] === 'Hoàn thành'): ?>
+                                    <?= htmlspecialchars($dish['Status']) ?>
+                                <?php else: ?>
+                                    <form method="post" action="index.php?controller=kitchen&action=updateStatus" style="display:inline;">
+                                        <input type="hidden" name="MaMon" value="<?= htmlspecialchars($dish['MaMon']) ?>">
+                                        <input type="hidden" name="MaDH" value="<?= htmlspecialchars($dish['MaDH']) ?>">
+                                        <button type="submit">Hoàn tất món</button>
+                                    </form>
+                                <?php endif; ?> 
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
