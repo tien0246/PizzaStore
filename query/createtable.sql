@@ -1274,6 +1274,6 @@ CREATE PROCEDURE "UpdateStatusThucThi"(
 BEGIN
     UPDATE ThucThi
     SET 
-        Status = 'Hoàn thành'
+        Status = 'Hoàn thành', ThoiGianHoanTat = CONVERT_TZ(NOW(), 'UTC', 'Asia/Ho_Chi_Minh')
     WHERE MaDH = p_MaDH AND MaMon = p_MaMon;
 END
