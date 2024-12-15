@@ -41,7 +41,6 @@
                         <th>Mã Nhân Viên Bếp</th>
                         <th>Mã Nhân Viên Phục Vụ</th>
                         <th>Thời Gian Nhận</th>
-                        <th>Thời Gian Hoàn Tất</th>
                         <th>Status</th>
                     </tr>
                 </thead>
@@ -54,7 +53,6 @@
                             <td><?= htmlspecialchars($dish['MaNVBep']) ?></td>
                             <td><?= htmlspecialchars($dish['MaNVPhucVu']) ?></td>
                             <td><?= htmlspecialchars($dish['ThoiGianNhan']) ?></td>
-                            <td><?= htmlspecialchars($dish['ThoiGianHoanTat']) ?></td>
                             <td>
                                 <?php if ($dish['Status'] === 'Hoàn thành'): ?>
                                     <?= htmlspecialchars($dish['Status']) ?>
@@ -62,7 +60,7 @@
                                     <form method="post" action="index.php?controller=kitchen&action=updateStatus" style="display:inline;">
                                         <input type="hidden" name="MaMon" value="<?= htmlspecialchars($dish['MaMon']) ?>">
                                         <input type="hidden" name="MaDH" value="<?= htmlspecialchars($dish['MaDH']) ?>">
-                                        <button type="submit">Hoàn tất món</button>
+                                        <button class="btn-primary" type="submit">Hoàn tất món</button>
                                     </form>
                                 <?php endif; ?> 
                             </td>
