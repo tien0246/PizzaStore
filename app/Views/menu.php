@@ -28,7 +28,7 @@
         <?php endif; ?>
         
         <div class="row justify-content-center">
-            
+<!--             
             <div class="col-md-4 p-2">
                 <div class="card menu-card" onclick="window.location.href='index.php?controller=order&action=create'">
                     <div class="card-body">
@@ -36,7 +36,7 @@
                         <p class="card-text">Tạo mới một đơn hàng với các món ăn.</p>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div class="col-md-4 p-2">
                 <div class="card menu-card" onclick="window.location.href='index.php?controller=kitchen&action=view'">
                     <div class="card-body">
@@ -61,14 +61,23 @@
                     </div>
                 </div>
             </div>
+            
+            <div class="col-md-4 p-2">
+                <div class="card menu-card" onclick="window.location.href='index.php?controller=employee&action=list'">
+                    <div class="card-body">
+                        <h5 class="card-title">Danh Sách Nhân viên</h5>
+                        <p class="card-text">Xem và quản lý danh sách nhân viên.</p>
+                    </div>
+                </div>
+            </div>
             <div class="col-md-4 p-2">
                 <div class="card menu-card" onclick="window.location.href='index.php?controller=customer&action=create'">
                     <div class="card-body">
                         <h5 class="card-title">Tạo Khách Hàng</h5>
-                        <p class="card-text">Nhập thông tin khách hàng mới vào hệ thống.</p>
+                        <p class="card-text">Nhập thông tin khách hàng mới.</p>
                     </div>
                 </div>
-            </div>
+            </div>  
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
