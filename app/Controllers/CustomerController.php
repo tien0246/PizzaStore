@@ -36,5 +36,16 @@ class CustomerController {
             exit();
         }
     }
+
+    public function list() {
+        try {
+            $customers = $this->customerModel->getAllCustomers();
+            require 'app/Views/customer_list.php';
+        } catch (PDOException $e) {
+            $_SESSION['error'] = "Lỗi: " . $e->getMessage();
+            header("Location: index.php?controller=menu");
+            exit();
+        }
+    }
 }
 ?>

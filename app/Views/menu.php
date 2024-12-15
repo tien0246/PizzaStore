@@ -45,11 +45,19 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 p-2">
+            <!-- <div class="col-md-4 p-2">
                 <div class="card menu-card" onclick="window.location.href='index.php?controller=report&action=view'">
                     <div class="card-body">
                         <h5 class="card-title">Báo cáo</h5>
                         <p class="card-text">Thống kê đơn hàng, món ăn và doanh thu</p>
+                    </div>
+                </div>
+            </div> -->
+            <div class="col-md-4 p-2">
+                <div class="card menu-card" onclick="window.location.href='index.php?controller=customer&action=list'">
+                    <div class="card-body">
+                        <h5 class="card-title">Danh Sách Khách Hàng</h5>
+                        <p class="card-text">Xem và quản lý danh sách khách hàng.</p>
                     </div>
                 </div>
             </div>

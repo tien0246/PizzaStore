@@ -16,6 +16,8 @@ switch ($controller) {
             $customerController->create();
         } elseif ($action === 'store') {
             $customerController->store();
+        } elseif ($action === 'list') {
+            $customerController->list();
         } else {
             $customerController->create();
         }
