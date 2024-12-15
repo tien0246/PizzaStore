@@ -141,9 +141,9 @@ CREATE TABLE CungCap (
     CONSTRAINT FK_CungCap_NguyenLieu FOREIGN KEY (MaNL)
         REFERENCES NguyenLieu(MaNL) ON DELETE restrict,
     CONSTRAINT FK_CungCap_NhaCungCap FOREIGN KEY (TenNCC)
-        REFERENCES NhaCungCap(TenNCC) ON DELETE set null,
+        REFERENCES NhaCungCap(TenNCC) ON DELETE restrict,
     CONSTRAINT FK_CungCap_NhanVienKiemKho FOREIGN KEY (MaNVKiemKho)
-        REFERENCES NhanVienKiemKho(MaNV) ON DELETE set null 
+        REFERENCES NhanVienKiemKho(MaNV) ON DELETE restrict
 );
 
 CREATE TABLE KhachHang (
