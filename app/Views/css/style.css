@@ -1,0 +1,51 @@
+body {
+    background-color: #fff8e1; 
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #fdd835; 
+}
+
+.btn-primary {
+    background-color: #fdd835;
+    border-color: #fdd835;
+}
+
+.btn-primary:hover {
+    background-color: #fbc02d;
+    border-color: #fbc02d;
+}
+
+.btn-secondary {
+    background-color: #ffeb3b;
+    border-color: #ffeb3b;
+}
+
+.btn-secondary:hover {
+    background-color: #fdd835;
+    border-color: #fdd835;
+}
+
+.card {
+    border: 2px solid #fdd835;
+}
+
+.menu-card {
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.menu-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+}

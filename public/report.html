@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Báo cáo theo ngày</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background: linear-gradient(
+            rgba(255, 99, 71, 0.7),
+            rgba(255, 198, 125, 0.7)
+          ),
+          url("https://t3.ftcdn.net/jpg/05/64/32/70/360_F_564327039_eHOuKCz4S0BZbVbLrdnIj4cSlZimBIe7.jpg")
+            fixed;
+        background-size: cover;
+      }
+
+      .page-title {
+        color: #d63031;
+        color: #fff2d7;
+        color: #fad550;
+        font-weight: bold;
+        text-transform: uppercase;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .card {
+        background-color: transparent;
+        box-shadow: none;
+      }
+
+      li {
+        list-style-type: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 12px 0;
+      }
+
+      .report-header {
+        background-color: rgba(255, 99, 71, 0.8);
+        backdrop-filter: blur(5px);
+        color: white;
+        font-weight: bold;
+        border-radius: 10px 10px 0 0;
+        padding: 15px 0;
+      }
+
+      .report-row {
+        background-color: rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(5px);
+        border-bottom: 1px solid rgba(250, 177, 160, 0.5);
+        color: #2d3436;
+        font-weight: 500;
+        transition: all 0.3s;
+        padding: 10px 0;
+      }
+
+      .report-row:hover {
+        background-color: rgba(255, 218, 121, 0.6);
+        transform: scale(1.01);
+      }
+
+      .report-row li {
+        text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+      }
+
+      .status-preparing {
+        color: #d63031;
+        font-weight: bold;
+        text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+      }
+
+      .status-completed {
+        color: #00b894;
+        font-weight: bold;
+        text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+      }
+
+      .btn-success {
+        background-color: #00b894;
+        border: none;
+      }
+
+      .btn-success:hover {
+        background-color: #00a884;
+      }
+
+      .btn-secondary {
+        background-color: #b2bec3;
+        border: none;
+      }
+
+      /* Thêm icon pizza nhỏ bên cạnh tên món */
+      .food-name::before {
+        content: "🍕";
+        margin-right: 8px;
+      }
+
+      /* Thêm hiệu ứng loading cho trạng thái đang chế biến */
+      .status-preparing::after {
+        content: "...";
+        animation: loading 1.5s infinite;
+      }
+      .container-fluid {
+        display: flex;
+        gap: 10px;
+      }
+      .container-fluid .date-container  {
+        flex: 5;
+      }
+      .container-fluid .food-container {
+        flex: 9; 
+      }
+
+      @keyframes loading {
+        0% {
+          content: ".";
+        }
+        33% {
+          content: "..";
+        }
+        66% {
+          content: "...";
+        }
+      }
+      input[type="radio"] {
+        display: none;
+      }
+
+      input[type="radio"] + label {
+        position: relative;
+        padding-left: 30px;
+        cursor: pointer;
+      }
+
+      input[type="radio"] + label::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 20px;
+        height: 20px;
+        border: 1px solid #ccc;
+        border-radius: 50%;
+        background-color: #fff;
+      }
+
+      input[type="radio"]:checked + label::before {
+        background-color: #00b894;
+        border-color: #00b894;
+      }
+
+      input[type="radio"]:checked + label::after {
+        content: "";
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid mt-4 pb-5">
+      <div class="date-container" id="reportDateContainer" >
+        <h2 class="mb-4 text-center page-title">
+          <span class="me-2">🍕</span>
+          Báo cáo theo đơn
+          <span class="ms-2">🍕</span>
+        </h2>
+        <div class="card shadow">
+          <div class="card-body px-4">
+            <div class="d-flex justify-content-around align-items-center mb-3">
+            <div class="form-check form-check-inline" style="gap: 10px">
+              <input class="form-check-input" type="radio" name="sortType" id="sortDate" value="date" >
+              <label class="form-check-label" for="sortDate">Ngày</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="sortType" id="sortOrderId" value="orderId" >
+              <label class="form-check-label" for="sortOrderId">Mã đơn</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="sortType" id="sortTotalMoney" value="totalMoney" >
+              <label class="form-check-label" for="sortTotalMoney">Tổng tiền</label>
+            </div>
+          </div>
+            <ul class="row report-list report-header">
+              <li class="col-sm-5">Ngày</li>
+              <li class="col-sm-2">Mã đơn</li>
+              <li class="col-sm-5">Tổng tiền</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="food-container" id="reportFoodContainer" >
+        <h2 class="mb-4 text-center page-title">
+          <span class="me-2">🍕</span>
+          Báo cáo theo món
+          <span class="ms-2">🍕</span>
+        </h2>
+        <div class="card shadow">
+          <div class="card-body px-4">
+            <ul class="row report-list report-header">
+              <li class="col-sm-2">Ngày</li>
+              <li class="col-sm-2">Mã đơn</li>
+              <li class="col-sm-2">Tên món</li>
+              <li class="col-sm-2">Số lượng</li>
+              <li class="col-sm-2">Đơn giá</li>
+              <li class="col-sm-2">Thành tiền</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script> -->
+    <script>
+      const loadFoodReport = (reports) => {
+        reports.map(report => {
+          // console.log('report: ', report);
+          $("#reportFoodContainer .card-body").append(`
+            <ul class="row report-row">
+              <li class="col-sm-2">${report.orderDate}</li>
+              <li class="col-sm-2">${report.orderId}</li>
+              <li class="col-sm-2">${report.foodName}</li>
+              <li class="col-sm-2">${report.quantity}</li>
+              <li class="col-sm-2">${report.price}</li>
+              <li class="col-sm-2">${report.totalMoney}</li>
+            </ul>
+          `);
+        }
+        )
+        
+      }
+      const loadDateReport = (reports) => {
+        reports.map(report => {
+          //console.log('report: ', report);
+          $("#reportDateContainer .card-body").append(`
+            <ul class="row report-row">
+              <li class="col-sm-5">${report.orderDate}</li>
+              <li class="col-sm-2">${report.orderId}</li>
+              <li class="col-sm-5">${report.totalMoney}</li>
+            </ul>
+          `);
+        }
+        )
+        
+      }
+      async function fetchOrderCompleted() {
+        try {
+          // $.ajax({
+          //   url: '',
+          //   type: 'GET',
+          //   dataType: 'json',
+          //   success: function (response) {
+          //     reportDataForDate = response.orders
+          //     renderReport(reportDataForDate)
+          //   },
+          //   error: function (jqXHR, textStatus, errorThrown) {
+          //     console.log('Error:', errorThrown);
+          //   }
+          // })
+          const response = await fetch('./db.json');  
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+          console.log('data:', data);
+
+          const foods = data.foods
+          console.log('foods: ', foods);
+          
+          const orderCompleted = data.orders.filter(order => order.status === "done");
+          console.log('orderCompleted: ', orderCompleted);
+
+          const orderCompletedIds = orderCompleted.map(order => order.orderId);
+
+          const orderDetailCompleted = data.orderDetails.filter(detail =>
+            orderCompletedIds.includes(detail.orderId) 
+          );
+          console.log('orderDetailCompleted: ', orderDetailCompleted);
+
+
+
+
+
+          const reportDataForDate = orderCompleted.map(order => {
+            const totalMoney = orderDetailCompleted.reduce((total, detail) => {
+              const food = foods.find(food => food.foodId === detail.foodId && order.orderId === detail.orderId);              
+              return total + (food ? food.price * detail.quantity : 0);
+            }, 0);
+
+            return {
+              orderId: order.orderId,
+              orderDate: order.timeCompleted.split(' ')[1],
+              totalMoney,
+            };
+          });
+
+          loadDateReport(reportDataForDate);
+          // chưa sort theo ngày 
+
+
+
+          const reportDataForFood = orderDetailCompleted.map(detail => {
+            const food = foods.find(food => food.foodId === detail.foodId);
+            const order = orderCompleted.find(order => order.orderId === detail.orderId)            
+            return {
+              orderId: detail.orderId,
+              foodName: food.name,
+              quantity: detail.quantity,
+              price: food.price,
+              totalMoney: food.price * detail.quantity,
+              orderDate: order.timeCompleted.split(' ')[1]
+            };
+          });
+
+          console.log('reportDataForFood: ', reportDataForFood);
+          loadFoodReport(reportDataForFood);
+
+
+        } 
+        catch (err) {
+           console.error("Error fetching data:", err);
+        }
+        
+      }
+      
+
+      function sortReportList(sortType) {
+        console.log('sortType: ', sortType);
+        
+        let reportDateList = $('#reportDateContainer .report-row');
+        let reportFoodList = $('#reportFoodContainer .report-row');
+        
+        if (sortType === 'date') {
+          reportDateList.sort(function (a, b) {
+            const dateA = $($(a).find('.col-sm-5')[0]).text().split('/');
+            const dateB = $($(b).find('.col-sm-5')[0]).text().split('/');
+            const formattedDateA = new Date(`${dateA[2]}-${dateA[1]}-${dateA[0]}`);
+            const formattedDateB = new Date(`${dateB[2]}-${dateB[1]}-${dateB[0]}`);
+            return formattedDateA - formattedDateB;
+          });
+          // reportFoodList.sort(function (a, b) {
+          //   const dateA = $($(a).find('.col-sm-5')[0]).text().split('/');
+          //   const dateB = $($(b).find('.col-sm-5')[0]).text().split('/');
+          //   const formattedDateA = new Date(`${dateA[2]}-${dateA[1]}-${dateA[0]}`);
+          //   const formattedDateB = new Date(`${dateB[2]}-${dateB[1]}-${dateB[0]}`);
+          //   return formattedDateA - formattedDateB;
+          // });
+        } else if (sortType === 'orderId') {
+          reportDateList.sort(function (a, b) {
+            const orderIdA = parseInt($(a).find('.col-sm-2').text());
+            const orderIdB = parseInt($(b).find('.col-sm-2').text());
+            return orderIdA - orderIdB;
+          });
+          // reportFoodList.sort(function (a, b) {
+          //   const orderIdA = parseInt($(a).find('.col-sm-2').text());
+          //   const orderIdB = parseInt($(b).find('.col-sm-2').text());
+          //   return orderIdA - orderIdB;
+          // });
+        } else if (sortType === 'totalMoney') {
+          reportDateList.sort(function (a, b) {
+            const totalMoneyA = parseInt($($(a).find('.col-sm-5')[1]).text());
+            const totalMoneyB = parseInt($($(b).find('.col-sm-5')[1]).text());
+            return totalMoneyA - totalMoneyB;
+          });
+          // reportFoodList.sort(function (a, b) {
+          //   const totalMoneyA = parseFloat($(a).find('.col-sm-5').text());
+          //   const totalMoneyB = parseFloat($(b).find('.col-sm-5').text());
+          //   return totalMoneyA - totalMoneyB;
+          // });
+        }
+        // Remove the existing list items
+        $('#reportDateContainer .report-row').remove();
+        $('#reportFoodContainer .report-row').remove();
+
+        // Append the sorted list items back to the container
+        reportDateList.appendTo('#reportDateContainer .card-body');
+        reportFoodList.appendTo('#reportFoodContainer .card-body');
+      }
+
+      $(document).ready(function () {
+        fetchOrderCompleted();
+
+        // Add event listener to the radio buttons
+        $('input[type="radio"]').on('change', function () {
+          const sortType = $(this).val();          
+          sortReportList(sortType);
+        });
+      });
+    </script>
+  </body>
+</html>
