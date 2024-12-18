@@ -5,10 +5,11 @@ require_once 'app/Controllers/CustomerController.php';
 require_once 'app/Controllers/OrderController.php';
 require_once 'app/Controllers/KitchenController.php';
 require_once 'app/Controllers/ReportController.php';
+require_once 'app/Controllers/EmployeeController.php';
 
 $controller = isset($_GET['controller']) ? $_GET['controller'] : 'menu';
 $action = isset($_GET['action']) ? $_GET['action'] : 'index';
-
+$id = isset($_GET['id']) ? $_GET['id'] :'1';
 switch ($controller) {
     case 'customer':
         $customerController = new CustomerController();
@@ -49,6 +50,19 @@ switch ($controller) {
             $reportController->view();
         } else {
             $reportController->view();
+        }
+        break;
+    case 'employee':
+        $reportController = new EmployeeController();
+        if ($action === 'list') {
+            $reportController->list();
+        } elseif ($action === 'create') {
+            $reportController->create();
+        } elseif ($action === 'edit') {
+            $reportController->update($id);
+        }
+        else {
+            $reportController->list();
         }
         break;
     case 'menu':
