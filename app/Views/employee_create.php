@@ -58,7 +58,7 @@
                 <input type="text" class="form-control" id="maPB" name="maPB" placeholder="Nhập mã phòng ban" required>
             </div>
             <button type="submit" class="btn btn-primary">Thêm</button>
-            <a href="index.php?controller=employee&action=list" class="btn btn-secondary">Hủy</a>
+            <a href="index.php" class="btn btn-secondary">Hủy</a>
         </form>
     </div>
 </body>

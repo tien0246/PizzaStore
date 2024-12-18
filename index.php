@@ -53,16 +53,42 @@ switch ($controller) {
         }
         break;
     case 'employee':
-        $reportController = new EmployeeController();
+        $employeeController = new EmployeeController();
         if ($action === 'list') {
-            $reportController->list();
+            $employeeController->list();
         } elseif ($action === 'create') {
-            $reportController->create();
-        } elseif ($action === 'edit') {
-            $reportController->update($id);
+            $employeeController->create();
+        } elseif ($action === 'store') {
+            $employeeController->store();
+        }elseif ($action === 'edit') {
+            if (isset($_GET['id'])) {
+                $employeeController->edit($_GET['id']);
+            } else {
+                $_SESSION['error'] = "ID nhân viên không được cung cấp.";
+                header("Location: index.php?controller=employee&action=list");
+                exit();
+            }
+        } else if ($action === 'update') {
+            if (isset($_GET['id'])) {
+                $employeeController->update($_GET['id']);
+            } else {
+                $_SESSION['error'] = "ID nhân viên không được cung cấp.";
+                header("Location: index.php?controller=employee&action=list");
+                exit();
+            }
+        } elseif ($action === 'delete') {
+            if (isset($_GET['id'])) {
+                $employeeController->delete($_GET['id']);
+            } else {
+                $_SESSION['error'] = "ID nhân viên không được cung cấp.";
+                header("Location: index.php?controller=employee&action=list");
+                exit();
+            }
         }
         else {
-            $reportController->list();
+            $_SESSION['error'] = "Hành động không hợp lệ.";
+                header("Location: index.php?controller=employee&action=list");
+                exit();
         }
         break;
     case 'menu':

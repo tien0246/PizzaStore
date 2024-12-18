@@ -1277,3 +1277,247 @@ BEGIN
         Status = 'Hoàn thành', ThoiGianHoanTat = CONVERT_TZ(NOW(), 'UTC', 'Asia/Ho_Chi_Minh')
     WHERE MaDH = p_MaDH AND MaMon = p_MaMon;
 END
+//
+CREATE PROCEDURE "GetAllNhanVienFilter"(
+    IN p_search VARCHAR(255) ,
+    IN p_sort_column VARCHAR(255),
+    IN p_sort_order VARCHAR(4)
+)
+BEGIN
+    IF p_search IS NULL OR p_search = '' THEN
+        -- No search
+        IF p_sort_order = 'ASC' THEN
+            IF p_sort_column = 'MaNV' THEN
+                SELECT *
+                FROM NhanVien
+                ORDER BY MaNV ASC;
+            ELSEIF p_sort_column = 'HoTen' THEN
+                SELECT *
+                FROM NhanVien
+                ORDER BY HoTen ASC;
+            ELSEIF p_sort_column = 'NgaySinh' THEN
+                SELECT *
+                FROM NhanVien
+                ORDER BY NgaySinh ASC;
+						ELSEIF p_sort_column = 'CanCuocCongDan' THEN
+                SELECT *
+                FROM NhanVien
+                ORDER BY CanCuocCongDan ASC;
+						ELSEIF p_sort_column = 'GioiTinh' THEN
+                SELECT *
+                FROM NhanVien
+                ORDER BY GioiTinh ASC;
+						ELSEIF p_sort_column = 'SoDienThoai' THEN
+                SELECT *
+                FROM NhanVien
+                ORDER BY SoDienThoai ASC;
+						ELSEIF p_sort_column = 'SoNha' THEN
+                SELECT *
+                FROM NhanVien
+                ORDER BY SoNha ASC;
+						ELSEIF p_sort_column = 'MaPB' THEN
+                SELECT *
+                FROM NhanVien
+                ORDER BY MaPB ASC;
+            ELSE
+                -- Default No search ASC Sort
+                SELECT *
+                FROM NhanVien
+                ORDER BY MaNV ASC;
+            END IF;
+        ELSEIF p_sort_order = 'DESC' THEN
+            IF p_sort_column = 'MaNV' THEN
+                SELECT *
+                FROM NhanVien
+                ORDER BY MaNV DESC;
+            ELSEIF p_sort_column = 'HoTen' THEN
+                SELECT *
+                FROM NhanVien
+                ORDER BY HoTen DESC;
+            ELSEIF p_sort_column = 'NgaySinh' THEN
+                SELECT *
+                FROM NhanVien
+                ORDER BY NgaySinh DESC;
+						ELSEIF p_sort_column = 'CanCuocCongDan' THEN
+                SELECT *
+                FROM NhanVien
+                ORDER BY CanCuocCongDan DESC;
+						ELSEIF p_sort_column = 'GioiTinh' THEN
+                SELECT *
+                FROM NhanVien
+                ORDER BY GioiTinh DESC;
+						ELSEIF p_sort_column = 'SoDienThoai' THEN
+                SELECT *
+                FROM NhanVien
+                ORDER BY SoDienThoai DESC;
+						ELSEIF p_sort_column = 'SoNha' THEN
+                SELECT *
+                FROM NhanVien
+                ORDER BY SoNha DESC;		
+						ELSEIF p_sort_column = 'MaPB' THEN
+                SELECT *
+                FROM NhanVien
+                ORDER BY MaPB DESC;
+            ELSE
+                -- Default No search DESC Sort
+                SELECT *
+                FROM NhanVien
+                ORDER BY MaNV DESC;
+            END IF;
+        ELSE
+            -- Invalid sort_order, defaulting to ASC
+            SELECT *
+            FROM NhanVien
+            ORDER BY MaNV ASC;
+        END IF;
+    ELSE
+				SET p_search = CONCAT('%', p_search, '%'); 
+        -- Search filter is applied
+        IF p_sort_order = 'ASC' THEN
+            IF p_sort_column = 'MaNV' THEN
+                SELECT *
+                FROM NhanVien
+                WHERE (MaNV LIKE p_search OR HoTen LIKE p_search OR NgaySinh LIKE p_search OR CanCuocCongDan LIKE p_search OR GioiTinh LIKE p_search OR SoDienThoai LIKE p_search OR SoNha LIKE p_search OR Duong LIKE p_search OR Xa LIKE p_search OR Huyen LIKE p_search OR Tinh LIKE p_search OR MaPB LIKE p_search)
+                ORDER BY MaNV ASC;
+            ELSEIF p_sort_column = 'HoTen' THEN
+                SELECT *
+                FROM NhanVien
+                WHERE (MaNV LIKE p_search OR HoTen LIKE p_search OR NgaySinh LIKE p_search OR CanCuocCongDan LIKE p_search OR GioiTinh LIKE p_search OR SoDienThoai LIKE p_search OR SoNha LIKE p_search OR Duong LIKE p_search OR Xa LIKE p_search OR Huyen LIKE p_search OR Tinh LIKE p_search OR MaPB LIKE p_search)
+                ORDER BY HoTen ASC;
+            ELSEIF p_sort_column = 'NgaySinh' THEN
+                SELECT *
+                FROM NhanVien
+                WHERE (MaNV LIKE p_search OR HoTen LIKE p_search OR NgaySinh LIKE p_search OR CanCuocCongDan LIKE p_search OR GioiTinh LIKE p_search OR SoDienThoai LIKE p_search OR SoNha LIKE p_search OR Duong LIKE p_search OR Xa LIKE p_search OR Huyen LIKE p_search OR Tinh LIKE p_search OR MaPB LIKE p_search)
+                ORDER BY NgaySinh ASC;
+						ELSEIF p_sort_column = 'CanCuocCongDan' THEN
+                SELECT *
+                FROM NhanVien
+                WHERE (MaNV LIKE p_search OR HoTen LIKE p_search OR NgaySinh LIKE p_search OR CanCuocCongDan LIKE p_search OR GioiTinh LIKE p_search OR SoDienThoai LIKE p_search OR SoNha LIKE p_search OR Duong LIKE p_search OR Xa LIKE p_search OR Huyen LIKE p_search OR Tinh LIKE p_search OR MaPB LIKE p_search)
+                ORDER BY CanCuocCongDan ASC;
+						ELSEIF p_sort_column = 'GioiTinh' THEN
+                SELECT *
+                FROM NhanVien
+                WHERE (MaNV LIKE p_search OR HoTen LIKE p_search OR NgaySinh LIKE p_search OR CanCuocCongDan LIKE p_search OR GioiTinh LIKE p_search OR SoDienThoai LIKE p_search OR SoNha LIKE p_search OR Duong LIKE p_search OR Xa LIKE p_search OR Huyen LIKE p_search OR Tinh LIKE p_search OR MaPB LIKE p_search)
+                ORDER BY GioiTinh ASC;
+						ELSEIF p_sort_column = 'SoDienThoai' THEN
+                SELECT *
+                FROM NhanVien
+                WHERE (MaNV LIKE p_search OR HoTen LIKE p_search OR NgaySinh LIKE p_search OR CanCuocCongDan LIKE p_search OR GioiTinh LIKE p_search OR SoDienThoai LIKE p_search OR SoNha LIKE p_search OR Duong LIKE p_search OR Xa LIKE p_search OR Huyen LIKE p_search OR Tinh LIKE p_search OR MaPB LIKE p_search)
+                ORDER BY SoDienThoai ASC;
+						ELSEIF p_sort_column = 'SoNha' THEN
+                SELECT *
+                FROM NhanVien
+                WHERE (MaNV LIKE p_search OR HoTen LIKE p_search OR NgaySinh LIKE p_search OR CanCuocCongDan LIKE p_search OR GioiTinh LIKE p_search OR SoDienThoai LIKE p_search OR SoNha LIKE p_search OR Duong LIKE p_search OR Xa LIKE p_search OR Huyen LIKE p_search OR Tinh LIKE p_search OR MaPB LIKE p_search)
+                ORDER BY SoNha ASC;
+						ELSEIF p_sort_column = 'MaPB' THEN
+                SELECT *
+                FROM NhanVien
+                WHERE (MaNV LIKE p_search OR HoTen LIKE p_search OR NgaySinh LIKE p_search OR CanCuocCongDan LIKE p_search OR GioiTinh LIKE p_search OR SoDienThoai LIKE p_search OR SoNha LIKE p_search OR Duong LIKE p_search OR Xa LIKE p_search OR Huyen LIKE p_search OR Tinh LIKE p_search OR MaPB LIKE p_search)
+                ORDER BY MaPB ASC;
+            ELSE
+                -- Default Sort
+                SELECT *
+                FROM NhanVien
+                WHERE (MaNV LIKE p_search OR HoTen LIKE p_search OR NgaySinh LIKE p_search OR CanCuocCongDan LIKE p_search OR GioiTinh LIKE p_search OR SoDienThoai LIKE p_search OR SoNha LIKE p_search OR Duong LIKE p_search OR Xa LIKE p_search OR Huyen LIKE p_search OR Tinh LIKE p_search OR MaPB LIKE p_search)
+                ORDER BY MaNV ASC;
+            END IF;
+        ELSEIF p_sort_order = 'DESC' THEN
+            IF p_sort_column = 'MaNV' THEN
+                SELECT *
+                FROM NhanVien
+                WHERE (MaNV LIKE p_search OR HoTen LIKE p_search OR NgaySinh LIKE p_search OR CanCuocCongDan LIKE p_search OR GioiTinh LIKE p_search OR SoDienThoai LIKE p_search OR SoNha LIKE p_search OR Duong LIKE p_search OR Xa LIKE p_search OR Huyen LIKE p_search OR Tinh LIKE p_search OR MaPB LIKE p_search)
+                ORDER BY MaNV DESC;
+            ELSEIF p_sort_column = 'HoTen' THEN
+                SELECT *
+                FROM NhanVien
+                WHERE (MaNV LIKE p_search OR HoTen LIKE p_search OR NgaySinh LIKE p_search OR CanCuocCongDan LIKE p_search OR GioiTinh LIKE p_search OR SoDienThoai LIKE p_search OR SoNha LIKE p_search OR Duong LIKE p_search OR Xa LIKE p_search OR Huyen LIKE p_search OR Tinh LIKE p_search OR MaPB LIKE p_search)
+                ORDER BY HoTen DESC;
+            ELSEIF p_sort_column = 'NgaySinh' THEN
+                SELECT *
+                FROM NhanVien
+                WHERE (MaNV LIKE p_search OR HoTen LIKE p_search OR NgaySinh LIKE p_search OR CanCuocCongDan LIKE p_search OR GioiTinh LIKE p_search OR SoDienThoai LIKE p_search OR SoNha LIKE p_search OR Duong LIKE p_search OR Xa LIKE p_search OR Huyen LIKE p_search OR Tinh LIKE p_search OR MaPB LIKE p_search)
+                ORDER BY NgaySinh DESC;
+						ELSEIF p_sort_column = 'CanCuocCongDan' THEN
+                SELECT *
+                FROM NhanVien
+                WHERE (MaNV LIKE p_search OR HoTen LIKE p_search OR NgaySinh LIKE p_search OR CanCuocCongDan LIKE p_search OR GioiTinh LIKE p_search OR SoDienThoai LIKE p_search OR SoNha LIKE p_search OR Duong LIKE p_search OR Xa LIKE p_search OR Huyen LIKE p_search OR Tinh LIKE p_search OR MaPB LIKE p_search)
+                ORDER BY CanCuocCongDan DESC;
+						ELSEIF p_sort_column = 'GioiTinh' THEN
+                SELECT *
+                FROM NhanVien
+                WHERE (MaNV LIKE p_search OR HoTen LIKE p_search OR NgaySinh LIKE p_search OR CanCuocCongDan LIKE p_search OR GioiTinh LIKE p_search OR SoDienThoai LIKE p_search OR SoNha LIKE p_search OR Duong LIKE p_search OR Xa LIKE p_search OR Huyen LIKE p_search OR Tinh LIKE p_search OR MaPB LIKE p_search)
+                ORDER BY GioiTinh DESC;
+						ELSEIF p_sort_column = 'SoDienThoai' THEN
+                SELECT *
+                FROM NhanVien
+                WHERE (MaNV LIKE p_search OR HoTen LIKE p_search OR NgaySinh LIKE p_search OR CanCuocCongDan LIKE p_search OR GioiTinh LIKE p_search OR SoDienThoai LIKE p_search OR SoNha LIKE p_search OR Duong LIKE p_search OR Xa LIKE p_search OR Huyen LIKE p_search OR Tinh LIKE p_search OR MaPB LIKE p_search)
+                ORDER BY SoDienThoai DESC;
+						ELSEIF p_sort_column = 'SoNha' THEN
+                SELECT *
+                FROM NhanVien
+                WHERE (MaNV LIKE p_search OR HoTen LIKE p_search OR NgaySinh LIKE p_search OR CanCuocCongDan LIKE p_search OR GioiTinh LIKE p_search OR SoDienThoai LIKE p_search OR SoNha LIKE p_search OR Duong LIKE p_search OR Xa LIKE p_search OR Huyen LIKE p_search OR Tinh LIKE p_search OR MaPB LIKE p_search)
+                ORDER BY SoNha DESC;
+						ELSEIF p_sort_column = 'MaPB' THEN
+                SELECT *
+                FROM NhanVien
+                WHERE (MaNV LIKE p_search OR HoTen LIKE p_search OR NgaySinh LIKE p_search OR CanCuocCongDan LIKE p_search OR GioiTinh LIKE p_search OR SoDienThoai LIKE p_search OR SoNha LIKE p_search OR Duong LIKE p_search OR Xa LIKE p_search OR Huyen LIKE p_search OR Tinh LIKE p_search OR MaPB LIKE p_search)
+                ORDER BY MaPB DESC;
+            ELSE
+                -- Default Sort
+                SELECT *
+                FROM NhanVien
+                WHERE (MaNV LIKE p_search OR HoTen LIKE p_search OR NgaySinh LIKE p_search OR CanCuocCongDan LIKE p_search OR GioiTinh LIKE p_search OR SoDienThoai LIKE p_search OR SoNha LIKE p_search OR Duong LIKE p_search OR Xa LIKE p_search OR Huyen LIKE p_search OR Tinh LIKE p_search OR MaPB LIKE p_search)
+                ORDER BY MaNV DESC;
+            END IF;
+        ELSE
+            -- Invalid sort_order, defaulting to ASC
+            IF p_sort_column = 'MaNV' THEN
+                SELECT *
+                FROM NhanVien
+                WHERE (MaNV LIKE p_search OR HoTen LIKE p_search OR NgaySinh LIKE p_search OR CanCuocCongDan LIKE p_search OR GioiTinh LIKE p_search OR SoDienThoai LIKE p_search OR SoNha LIKE p_search OR Duong LIKE p_search OR Xa LIKE p_search OR Huyen LIKE p_search OR Tinh LIKE p_search OR MaPB LIKE p_search)
+                ORDER BY MaNV ASC;
+            ELSEIF p_sort_column = 'HoTen' THEN
+                SELECT *
+                FROM NhanVien
+                WHERE (MaNV LIKE p_search OR HoTen LIKE p_search OR NgaySinh LIKE p_search OR CanCuocCongDan LIKE p_search OR GioiTinh LIKE p_search OR SoDienThoai LIKE p_search OR SoNha LIKE p_search OR Duong LIKE p_search OR Xa LIKE p_search OR Huyen LIKE p_search OR Tinh LIKE p_search OR MaPB LIKE p_search)
+                ORDER BY HoTen ASC;
+            ELSEIF p_sort_column = 'NgaySinh' THEN
+                SELECT *
+                FROM NhanVien
+                WHERE (MaNV LIKE p_search OR HoTen LIKE p_search OR NgaySinh LIKE p_search OR CanCuocCongDan LIKE p_search OR GioiTinh LIKE p_search OR SoDienThoai LIKE p_search OR SoNha LIKE p_search OR Duong LIKE p_search OR Xa LIKE p_search OR Huyen LIKE p_search OR Tinh LIKE p_search OR MaPB LIKE p_search)
+                ORDER BY NgaySinh ASC;
+						ELSEIF p_sort_column = 'CanCuocCongDan' THEN
+                SELECT *
+                FROM NhanVien
+                WHERE (MaNV LIKE p_search OR HoTen LIKE p_search OR NgaySinh LIKE p_search OR CanCuocCongDan LIKE p_search OR GioiTinh LIKE p_search OR SoDienThoai LIKE p_search OR SoNha LIKE p_search OR Duong LIKE p_search OR Xa LIKE p_search OR Huyen LIKE p_search OR Tinh LIKE p_search OR MaPB LIKE p_search)
+                ORDER BY CanCuocCongDan ASC;
+						ELSEIF p_sort_column = 'GioiTinh' THEN
+                SELECT *
+                FROM NhanVien
+                WHERE (MaNV LIKE p_search OR HoTen LIKE p_search OR NgaySinh LIKE p_search OR CanCuocCongDan LIKE p_search OR GioiTinh LIKE p_search OR SoDienThoai LIKE p_search OR SoNha LIKE p_search OR Duong LIKE p_search OR Xa LIKE p_search OR Huyen LIKE p_search OR Tinh LIKE p_search OR MaPB LIKE p_search)
+                ORDER BY GioiTinh ASC;
+						ELSEIF p_sort_column = 'SoDienThoai' THEN
+                SELECT *
+                FROM NhanVien
+                WHERE (MaNV LIKE p_search OR HoTen LIKE p_search OR NgaySinh LIKE p_search OR CanCuocCongDan LIKE p_search OR GioiTinh LIKE p_search OR SoDienThoai LIKE p_search OR SoNha LIKE p_search OR Duong LIKE p_search OR Xa LIKE p_search OR Huyen LIKE p_search OR Tinh LIKE p_search OR MaPB LIKE p_search)
+                ORDER BY SoDienThoai ASC;
+						ELSEIF p_sort_column = 'SoNha' THEN
+                SELECT *
+                FROM NhanVien
+                WHERE (MaNV LIKE p_search OR HoTen LIKE p_search OR NgaySinh LIKE p_search OR CanCuocCongDan LIKE p_search OR GioiTinh LIKE p_search OR SoDienThoai LIKE p_search OR SoNha LIKE p_search OR Duong LIKE p_search OR Xa LIKE p_search OR Huyen LIKE p_search OR Tinh LIKE p_search OR MaPB LIKE p_search)
+                ORDER BY SoNha ASC;
+						ELSEIF p_sort_column = 'MaPB' THEN
+                SELECT *
+                FROM NhanVien
+                WHERE (MaNV LIKE p_search OR HoTen LIKE p_search OR NgaySinh LIKE p_search OR CanCuocCongDan LIKE p_search OR GioiTinh LIKE p_search OR SoDienThoai LIKE p_search OR SoNha LIKE p_search OR Duong LIKE p_search OR Xa LIKE p_search OR Huyen LIKE p_search OR Tinh LIKE p_search OR MaPB LIKE p_search)
+                ORDER BY MaPB ASC;
+            ELSE
+                -- Default Sort
+                SELECT *
+                FROM NhanVien
+                WHERE (MaNV LIKE p_search OR HoTen LIKE p_search OR NgaySinh LIKE p_search OR CanCuocCongDan LIKE p_search OR GioiTinh LIKE p_search OR SoDienThoai LIKE p_search OR SoNha LIKE p_search OR Duong LIKE p_search OR Xa LIKE p_search OR Huyen LIKE p_search OR Tinh LIKE p_search OR MaPB LIKE p_search)
+                ORDER BY MaNV ASC;
+            END IF;
+        END IF;
+		END IF;
+ END
