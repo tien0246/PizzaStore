@@ -6,6 +6,112 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="app/Views/css/style.css">
 </head>
+<style>
+    body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa; /* Light grey for a soothing background */
+    color: #333; /* Soft dark color for text */
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    background: #ffffff; /* White background for the form container */
+    border-radius: 8px; /* Rounded corners for the container */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    padding: 2rem;
+    max-width: 600px;
+    margin: 2rem auto;
+    border: 1px solid #e3e3e3; /* Light border for a structured look */
+}
+
+h2 {
+    text-align: center;
+    font-weight: bold;
+    color: #444; /* Slightly muted header text color */
+}
+
+.form-label {
+    font-size: 0.95rem; /* Slightly smaller label text */
+    font-weight: 500;
+    color: #555;
+}
+
+.form-control, .form-select {
+    border-radius: 6px; /* Rounded inputs */
+    border: 1px solid #ccc; /* Neutral border color */
+    padding: 0.6rem;
+    font-size: 0.95rem;
+    color: #333;
+    background-color: #f9f9f9; /* Soft background for inputs */
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #5c8df6; /* Subtle blue for focused inputs */
+    box-shadow: 0 0 5px rgba(92, 141, 246, 0.5); /* Matching glow effect */
+    outline: none;
+}
+
+.btn-primary {
+    background-color: #5c8df6; /* Calm blue for the primary button */
+    border-color: #5c8df6;
+    color: #fff;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: #477ae3; /* Darker shade for hover */
+    transform: translateY(-1px); /* Subtle lift effect */
+}
+
+.btn-secondary {
+    background-color: #f0f0f0; /* Neutral grey for secondary button */
+    border-color: #ccc;
+    color: #555;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #e2e2e2; /* Slightly darker grey on hover */
+    transform: translateY(-1px);
+}
+
+.alert {
+    border-radius: 6px; /* Rounded alert boxes */
+    font-size: 0.95rem;
+}
+
+.alert-success {
+    background-color: #e6f8e6; /* Light green background for success */
+    color: #356435; /* Dark green text for success */
+    border-color: #d4f0d4;
+}
+
+.alert-error {
+    background-color: #f8e6e6; /* Light red background for errors */
+    color: #643535; /* Dark red text for errors */
+    border-color: #f0d4d4;
+}
+
+button {
+    cursor: pointer;
+}
+
+button:focus {
+    outline: none;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 1.5rem;
+    }
+}
+
+</style>
 <body>
     <div class="container mt-5">
         <h2 class="mb-4">Tạo Khách Hàng Mới</h2>
