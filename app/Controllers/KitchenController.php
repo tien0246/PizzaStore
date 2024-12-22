@@ -39,7 +39,8 @@ class KitchenController {
         }
     
         // Redirect back to the main page
-        header("Location: index.php?controller=kitchen&action=view");
+        // header("Location: index.php?controller=kitchen&action=view");
+        require 'app/Views/kitchen_view.php';
         exit;
     }
 }
