@@ -23,5 +23,11 @@ class Customer {
         $stmt->bindParam(':CCCD', $cccd);
         $stmt->execute();
     }
+
+    public function getAllCustomers() {
+        $stmt = $this->pdo->prepare("CALL GetAllKhachHang()");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 ?>
