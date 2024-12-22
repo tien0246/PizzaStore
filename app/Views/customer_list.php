@@ -1,21 +1,21 @@
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Danh Sách Khách Hàng</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="app/Views/css/style.css">
-    </head>
-    <style>
-  /* General Page Styling */
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Viewport meta tag for responsiveness -->
+    <title>Danh Sách Khách Hàng</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="app/Views/css/style.css">
+</head>
+<style>
+  /* General Page Styles */
   body {
+    background-color: #f4f6f9;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(
-        rgba(50, 50, 50, 0.5),
-        rgba(50, 50, 50, 0.5)
-      ),
-      url("https://t3.ftcdn.net/jpg/05/64/32/70/360_F_564327039_eHOuKCz4S0BZbVbLrdnIj4cSlZimBIe7.jpg")
-        fixed;
+        rgba(83, 244, 241, 0.2),
+        rgba(22, 209, 122, 0.3)
+      ) fixed;
     background-size: cover;
     color: #333;
     margin: 0;
@@ -39,6 +39,7 @@
     margin-bottom: 20px;
     border-bottom: 2px solid #bdc3c7;
     padding-bottom: 10px;
+    color: #16a085; /* Accent color */
   }
 
   /* Alerts */
@@ -80,6 +81,8 @@
     text-align: center;
     color: #2c3e50;
     padding: 12px;
+    background-color: #16a085; /* Accent color */
+    color: white;
   }
 
   .table tbody td {
@@ -96,6 +99,20 @@
   }
 
   /* Buttons */
+  .btn-primary {
+    background-color: #3498db;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #ffffff;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-primary:hover {
+    background-color: #2980b9;
+  }
+
   .btn-secondary {
     background-color: #95a5a6;
     border: none;
@@ -110,16 +127,44 @@
     background-color: #7f8c8d;
   }
 
-  /* Responsive Design */
-  @media (max-width: 768px) {
+  .btn-add {
+    margin-bottom: 20px;
+    background-color: #2ecc71;
+    color: white;
+    border: none;
+    font-size: 16px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-add:hover {
+    background-color: #27ae60;
+  }
+
+  /* Optional: Add cursor pointer to sortable headers */
+  th.sortable {
+    cursor: pointer;
+  }
+  
+  /* Optional: Add sort indicator */
+  th.sortable:after {
+    content: '\25B2\25BC'; /* Up and down arrows */
+    font-size: 0.6em;
+    margin-left: 5px;
+    color: #aaa;
+  }
+
+  /* Responsive Design with Bootstrap */
+  @media (max-width: 1200px) {
     h2 {
-      font-size: 20px;
+      font-size: 24px;
       padding-bottom: 8px;
     }
 
     .table thead th,
     .table tbody td {
-      font-size: 12px;
+      font-size: 14px;
       padding: 8px;
     }
 
@@ -128,33 +173,93 @@
       padding: 8px 16px;
     }
   }
+
+  @media (max-width: 992px) {
+    h2 {
+      font-size: 22px;
+    }
+
+    .table thead th,
+    .table tbody td {
+      font-size: 13px;
+      padding: 6px;
+    }
+
+    .btn-secondary {
+      font-size: 13px;
+      padding: 6px 12px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    h2 {
+      font-size: 20px;
+    }
+
+    .table thead th,
+    .table tbody td {
+      font-size: 12px;
+      padding: 6px;
+    }
+
+    .btn-secondary {
+      font-size: 12px;
+      padding: 6px 12px;
+    }
+
+    .container {
+      padding: 15px;
+    }
+
+    .table-responsive {
+      margin-top: 20px;
+    }
+  }
+
+  @media (max-width: 576px) {
+    h2 {
+      font-size: 18px;
+    }
+
+    .table thead th,
+    .table tbody td {
+      font-size: 11px;
+      padding: 5px;
+    }
+
+    .btn-secondary {
+      font-size: 11px;
+      padding: 5px 10px;
+    }
+  }
 </style>
 
-    <body>
-        <div class="container mt-5">
-            <h2 class="mb-4">Danh Sách Khách Hàng</h2>
-            
-            <?php if (isset($_SESSION['success'])): ?>
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <?= htmlspecialchars($_SESSION['success']) ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-                <?php unset($_SESSION['success']); ?>
-            <?php endif; ?>
-            
-            <?php if (isset($_SESSION['error'])): ?>
-                <div class="alert alert-error alert-dismissible fade show" role="alert">
-                    <?= htmlspecialchars($_SESSION['error']) ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-                <?php unset($_SESSION['error']); ?>
-            <?php endif; ?>
-            
-            <?php if (empty($customers)): ?>
-                <div class="alert alert-info" role="alert">
-                    Không có khách hàng nào trong hệ thống.
-                </div>
-            <?php else: ?>
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4">Danh Sách Khách Hàng</h2>
+        
+        <?php if (isset($_SESSION['success'])): ?>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <?= htmlspecialchars($_SESSION['success']) ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <?php unset($_SESSION['success']); ?>
+        <?php endif; ?>
+        
+        <?php if (isset($_SESSION['error'])): ?>
+            <div class="alert alert-error alert-dismissible fade show" role="alert">
+                <?= htmlspecialchars($_SESSION['error']) ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <?php unset($_SESSION['error']); ?>
+        <?php endif; ?>
+        
+        <?php if (empty($customers)): ?>
+            <div class="alert alert-info" role="alert">
+                Không có khách hàng nào trong hệ thống.
+            </div>
+        <?php else: ?>
+            <div class="table-responsive">
                 <table class="table table-bordered table-hover">
                     <thead class="table-warning">
                         <tr>
@@ -185,10 +290,11 @@
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-            <?php endif; ?>
-            
-            <a href="index.php" class="btn btn-secondary">Quay Lại</a>
-        </div>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-    </body>
-    </html>
+            </div>
+        <?php endif; ?>
+        
+        <a href="index.php" class="btn btn-secondary">Quay Lại</a>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
