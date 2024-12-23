@@ -32,7 +32,9 @@ class CustomerController {
             } catch (PDOException $e) {
                 $_SESSION['error'] = "Lỗi: " . $e->getMessage();
             }
+            ob_start();
             header("Location: index.php?controller=customer&action=create");
+            ob_start();
             exit();
         }
     }
@@ -43,7 +45,9 @@ class CustomerController {
             require 'app/Views/customer_list.php';
         } catch (PDOException $e) {
             $_SESSION['error'] = "Lỗi: " . $e->getMessage();
+            ob_start();
             header("Location: index.php?controller=menu");
+            ob_start();
             exit();
         }
     }

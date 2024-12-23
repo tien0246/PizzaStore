@@ -45,7 +45,9 @@ class EmployeeController {
             } catch (PDOException $e) {
                 $_SESSION['error'] = "Lỗi: " . $e->getMessage();
             }
+            ob_start();
             header("Location: index.php?controller=employee&action=list");
+            ob_end_flush();
             exit();
         }
     }
@@ -89,7 +91,9 @@ class EmployeeController {
             $employee = $this->employeeModel->getEmployeeDetail($id);
             if (!$employee) {
                 $_SESSION['error'] = "Không tìm thấy nhân viên với ID: " . htmlspecialchars($id);
+                ob_start();
                 header("Location: index.php?controller=employee&action=list");
+                ob_end_flush();
                 exit();
             }
             require 'app/Views/employee_edit.php';
@@ -134,8 +138,10 @@ class EmployeeController {
                 $_SESSION['error'] = "Lỗi CSDL: " . $e->getMessage();
             }
 
-            // header("Location: index.php?controller=employee&action=list");
-            require 'app/Views/employee_list.php';
+            ob_start();
+            header("Location: index.php?controller=employee&action=list");
+            ob_end_flush();
+
             exit();
         } else {
             // If not a POST request, redirect to the employee list
@@ -152,8 +158,11 @@ class EmployeeController {
             } catch (PDOException $e) {
                 $_SESSION['error'] = "Lỗi: " . $e->getMessage();
             }
-            // header("Location: index.php?controller=employee&action=list");
-            require 'app/Views/employee_list.php';
+
+            ob_start();
+            header("Location: index.php?controller=employee&action=list");
+            ob_end_flush();
+
             exit();
         }
     }

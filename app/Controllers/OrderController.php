@@ -40,7 +40,9 @@ class OrderController {
             } catch (PDOException $e) {
                 $_SESSION['error'] = "Lỗi: " . $e->getMessage();
             }
+            ob_start();
             header("Location: index.php?controller=order&action=create");
+            ob_end_flush();
             exit();
         }
     }
