@@ -134,7 +134,8 @@ class EmployeeController {
                 $_SESSION['error'] = "Lỗi CSDL: " . $e->getMessage();
             }
 
-            header("Location: index.php?controller=employee&action=list");
+            // header("Location: index.php?controller=employee&action=list");
+            require 'app/Views/employee_list.php';
             exit();
         } else {
             // If not a POST request, redirect to the employee list
@@ -151,7 +152,8 @@ class EmployeeController {
             } catch (PDOException $e) {
                 $_SESSION['error'] = "Lỗi: " . $e->getMessage();
             }
-            header("Location: index.php?controller=employee&action=list");
+            // header("Location: index.php?controller=employee&action=list");
+            require 'app/Views/employee_list.php';
             exit();
         }
     }
