@@ -4,7 +4,7 @@ session_start();
 require_once 'app/Controllers/CustomerController.php';
 require_once 'app/Controllers/OrderController.php';
 require_once 'app/Controllers/KitchenController.php';
-require_once 'app/Controllers/ReportController.php';
+// require_once 'app/Controllers/ReportController.php';
 require_once 'app/Controllers/EmployeeController.php';
 
 $controller = isset($_GET['controller']) ? $_GET['controller'] : 'menu';
@@ -44,14 +44,14 @@ switch ($controller) {
             $kitchenController->view();
         }
         break;
-    case 'report':
-        $reportController = new ReportController();
-        if ($action === 'view') {
-            $reportController->view();
-        } else {
-            $reportController->view();
-        }
-        break;
+    // case 'report':
+    //     $reportController = new ReportController();
+    //     if ($action === 'view') {
+    //         $reportController->view();
+    //     } else {
+    //         $reportController->view();
+    //     }
+    //     break;
     case 'employee':
         $employeeController = new EmployeeController();
         if ($action === 'list') {

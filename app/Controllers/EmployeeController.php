@@ -1,12 +1,3 @@
-
-
-
-
-
-
-
-
-
 <?php
 require_once 'app/Models/Employee.php';
 
